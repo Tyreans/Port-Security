@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" font-family="Inter, 'Segoe UI', system-ui, sans-serif">
+  <title>Telefonía IP: una PC conectada detrás de un teléfono IP presenta dos MAC en el puerto Fa0/1; maximum 1 provoca violación y maximum 2 funciona</title>
+  <defs>
+    <marker id="aTeal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#006b8f"/></marker>
+  </defs>
+  <rect width="1200" height="675" fill="#fbf9f8"/>
+  <text x="48" y="64" font-size="32" font-weight="800" fill="#161513">Telefonía IP: dos MAC en un solo puerto</text>
+
+  <!-- PC -->
+  <rect x="90" y="120" width="130" height="92" rx="8" fill="#ffffff" stroke="#161513" stroke-width="3"/>
+  <rect x="102" y="132" width="106" height="68" rx="4" fill="#d6e5e5"/>
+  <rect x="146" y="212" width="18" height="18" fill="#312d2a"/>
+  <rect x="116" y="230" width="78" height="8" rx="4" fill="#312d2a"/>
+  <text x="155" y="270" font-size="20" font-weight="600" fill="#161513" text-anchor="middle">PC del usuario</text>
+  <text x="155" y="294" font-size="18" font-weight="600" fill="#006b8f" text-anchor="middle">VLAN 10 · Datos</text>
+  <rect x="48" y="310" width="214" height="40" rx="8" fill="#ffffff" stroke="#d4cfca" stroke-width="2"/>
+  <text x="155" y="336" font-size="18" font-family="'JetBrains Mono', Consolas, monospace" fill="#161513" text-anchor="middle">MAC 2 00D0.BA11.2222</text>
+
+  <!-- Cable PC - teléfono -->
+  <line x1="226" y1="166" x2="400" y2="186" stroke="#006b8f" stroke-width="3" marker-end="url(#aTeal)"/>
+
+  <!-- Teléfono IP -->
+  <rect x="440" y="130" width="140" height="104" rx="8" fill="#ffffff" stroke="#161513" stroke-width="3"/>
+  <rect x="410" y="136" width="30" height="92" rx="8" fill="#312d2a"/>
+  <rect x="456" y="144" width="108" height="34" rx="4" fill="#d6e5e5"/>
+  <g fill="#47423e">
+    <circle cx="472" cy="196" r="5"/><circle cx="496" cy="196" r="5"/><circle cx="520" cy="196" r="5"/><circle cx="544" cy="196" r="5"/>
+    <circle cx="472" cy="216" r="5"/><circle cx="496" cy="216" r="5"/><circle cx="520" cy="216" r="5"/><circle cx="544" cy="216" r="5"/>
+  </g>
+  <text x="495" y="270" font-size="20" font-weight="600" fill="#161513" text-anchor="middle">Teléfono IP</text>
+  <text x="495" y="294" font-size="18" font-weight="600" fill="#006b8f" text-anchor="middle">VLAN 150 · Voz</text>
+  <rect x="388" y="310" width="214" height="40" rx="8" fill="#ffffff" stroke="#d4cfca" stroke-width="2"/>
+  <text x="495" y="336" font-size="18" font-family="'JetBrains Mono', Consolas, monospace" fill="#161513" text-anchor="middle">MAC 1 0019.AA55.1111</text>
+
+  <!-- Cable teléfono - switch -->
+  <line x1="586" y1="186" x2="740" y2="186" stroke="#006b8f" stroke-width="3" marker-end="url(#aTeal)"/>
+
+  <!-- Switch -->
+  <rect x="752" y="140" width="400" height="92" rx="8" fill="#312d2a"/>
+  <rect x="772" y="166" width="40" height="40" rx="4" fill="#ffffff" stroke="#006b8f" stroke-width="3"/>
+  <g fill="#47423e">
+    <rect x="828" y="166" width="40" height="40" rx="4"/><rect x="884" y="166" width="40" height="40" rx="4"/><rect x="940" y="166" width="40" height="40" rx="4"/><rect x="996" y="166" width="40" height="40" rx="4"/><rect x="1052" y="166" width="40" height="40" rx="4"/>
+  </g>
+  <text x="792" y="262" font-size="20" font-weight="600" fill="#006b8f" text-anchor="middle">Fa0/1</text>
+  <text x="952" y="294" font-size="20" font-weight="600" fill="#161513" text-anchor="middle">Switch: 2 MAC en Fa0/1</text>
+  <text x="952" y="320" font-size="18" font-weight="500" fill="#47423e" text-anchor="middle">voz y datos por el mismo cable</text>
+
+  <!-- Panel maximum 1 -->
+  <rect x="48" y="396" width="540" height="231" rx="8" fill="#ffffff" stroke="#d63b25" stroke-width="3"/>
+  <text x="76" y="440" font-size="24" font-weight="800" fill="#161513">Con maximum 1 (por defecto)</text>
+  <rect x="76" y="458" width="484" height="44" rx="8" fill="#f5f4f2"/>
+  <text x="92" y="487" font-size="18" font-family="'JetBrains Mono', Consolas, monospace" fill="#161513">port-security maximum 1</text>
+  <path d="M80 532 l26 26 M106 532 l-26 26" fill="none" stroke="#d63b25" stroke-width="5" stroke-linecap="round"/>
+  <text x="124" y="556" font-size="30" font-weight="800" fill="#d63b25">VIOLACIÓN</text>
+  <text x="76" y="600" font-size="18" font-weight="500" fill="#161513">La 2.ª MAC excede la cuota: puerto bloqueado</text>
+
+  <!-- Panel maximum 2 -->
+  <rect x="612" y="396" width="540" height="231" rx="8" fill="#ffffff" stroke="#33553c" stroke-width="3"/>
+  <text x="640" y="440" font-size="24" font-weight="800" fill="#161513">Con maximum 2</text>
+  <rect x="640" y="458" width="484" height="44" rx="8" fill="#f5f4f2"/>
+  <text x="656" y="487" font-size="18" font-family="'JetBrains Mono', Consolas, monospace" fill="#161513">port-security maximum 2</text>
+  <path d="M642 545 l10 12 l20 -24" fill="none" stroke="#33553c" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="688" y="556" font-size="30" font-weight="800" fill="#33553c">OK</text>
+  <text x="640" y="600" font-size="18" font-weight="500" fill="#161513">Teléfono (voz) + PC (datos) dentro de la cuota</text>
+</svg>

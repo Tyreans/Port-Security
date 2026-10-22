@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675">
+  <title>Proceso de aprendizaje dinámico en la memoria CAM del switch</title>
+  <defs>
+    <marker id="arr-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#006b8f"/>
+    </marker>
+    <marker id="arr-danger" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d63b25"/>
+    </marker>
+    <marker id="arr-forest" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#33553c"/>
+    </marker>
+    <marker id="arr-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#312d2a"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="675" fill="#fbf9f8"/>
+  <rect x="48" y="36" width="40" height="4" fill="#f0cc71"/>
+  <text x="48" y="72" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="26" font-weight="800" fill="#161513">APRENDIZAJE DINÁMICO EN LA MEMORIA CAM</text>
+  <text x="48" y="100" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="500" fill="#47423e">Inspección de SMAC, registro con Aging Timer de 300 s y decisión de reenvío o inundación</text>
+
+  <!-- Step 1: Frame arrives -->
+  <rect x="64" y="160" width="260" height="150" rx="8" fill="#ffffff" stroke="#006b8f" stroke-width="2"/>
+  <text x="90" y="198" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="17" font-weight="800" fill="#006b8f">1. Ingresa trama en Fa0/1</text>
+  <text x="90" y="232" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" fill="#161513">SMAC: 00:AA:00:11:22:33</text>
+  <text x="90" y="258" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" fill="#47423e">DMAC: 00:BB:00:99:88:77</text>
+  <text x="90" y="286" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#47423e">VLAN de acceso: 10</text>
+
+  <line x1="324" y1="235" x2="396" y2="235" stroke="#006b8f" stroke-width="3" marker-end="url(#arr-teal)"/>
+
+  <!-- Step 2: CAM Table lookup/record -->
+  <rect x="406" y="150" width="410" height="220" rx="8" fill="#ffffff" stroke="#312d2a" stroke-width="2"/>
+  <rect x="406" y="150" width="410" height="44" rx="8" fill="#312d2a"/>
+  <text x="611" y="178" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="800" fill="#ffffff">2. REGISTRO EN MEMORIA CAM (HARDWARE)</text>
+  <text x="430" y="222" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" font-weight="600" fill="#47423e">VLAN | Dirección MAC      | Tipo     | Puerto</text>
+  <line x1="430" y1="232" x2="790" y2="232" stroke="#e4e1dd"/>
+  <text x="430" y="258" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" fill="#33553c">10   | 00:AA:00:11:22:33  | DYNAMIC  | Fa0/1</text>
+  <text x="430" y="286" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" fill="#161513">10   | 00:CC:00:44:55:66  | DYNAMIC  | Fa0/2</text>
+  <rect x="430" y="310" width="360" height="40" rx="4" fill="#f1efed"/>
+  <text x="610" y="335" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" font-weight="600" fill="#161513">3. Aging Timer por defecto: 300 s (5 min)</text>
+
+  <!-- Step 4: Two outcomes -->
+  <line x1="816" y1="210" x2="880" y2="210" stroke="#33553c" stroke-width="3" marker-end="url(#arr-forest)"/>
+  <line x1="816" y1="305" x2="880" y2="305" stroke="#d63b25" stroke-width="3" marker-end="url(#arr-danger)"/>
+
+  <rect x="890" y="150" width="256" height="105" rx="8" fill="#ffffff" stroke="#33553c" stroke-width="2"/>
+  <text x="912" y="182" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="800" fill="#33553c">4A. DMAC en tabla CAM</text>
+  <text x="912" y="208" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#161513">Reenvío selectivo unicast</text>
+  <text x="912" y="230" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#47423e">hacia un único puerto.</text>
+
+  <rect x="890" y="270" width="256" height="115" rx="8" fill="#ffffff" stroke="#d63b25" stroke-width="2"/>
+  <text x="912" y="302" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="800" fill="#d63b25">4B. DMAC desconocida</text>
+  <text x="912" y="328" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#161513">Unknown Unicast Flooding:</text>
+  <text x="912" y="350" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#d63b25" font-weight="600">inunda todos los puertos</text>
+  <text x="912" y="370" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="13" fill="#47423e">de la misma VLAN.</text>
+
+  <!-- Hardware limit banner -->
+  <rect x="64" y="420" width="1082" height="165" rx="8" fill="#f1efed" stroke="#d4cfca" stroke-width="2"/>
+  <text x="100" y="462" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="19" font-weight="800" fill="#161513">Límite físico de la memoria CAM: entre 8,192 y 16,384 entradas</text>
+  <text x="100" y="496" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" fill="#161513">• La CAM consulta la dirección de 48 bits y devuelve el puerto en un solo ciclo de reloj (wire-speed).</text>
+  <text x="100" y="528" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" fill="#161513">• Por ser memoria de hardware costosa y finita, si un atacante llena todas las celdas disponibles, las nuevas</text>
+  <text x="116" y="554" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#d63b25">direcciones legítimas no pueden aprenderse y el switch cae al caso 4B (inundación masiva).</text>
+
+  <text x="1152" y="652" text-anchor="end" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#aea8a2">m1-tabla-cam-aprendizaje.svg</text>
+</svg>

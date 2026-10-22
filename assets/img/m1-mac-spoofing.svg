@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675">
+  <title>Suplantación de dirección MAC (MAC Spoofing) y fenómeno de MAC Flapping</title>
+  <defs>
+    <marker id="arr-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#006b8f"/>
+    </marker>
+    <marker id="arr-danger" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d63b25"/>
+    </marker>
+    <marker id="arr-forest" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#33553c"/>
+    </marker>
+    <marker id="arr-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#312d2a"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="675" fill="#fbf9f8"/>
+  <rect x="48" y="36" width="40" height="4" fill="#f0cc71"/>
+  <text x="48" y="72" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="26" font-weight="800" fill="#161513">SUPLANTACIÓN DE IDENTIDAD (MAC SPOOFING) Y MAC FLAPPING</text>
+  <text x="48" y="100" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="500" fill="#47423e">El atacante clona por software la MAC de un host legítimo y desestabiliza la tabla CAM</text>
+
+  <!-- Legit Victim -->
+  <rect x="64" y="165" width="320" height="185" rx="8" fill="#ffffff" stroke="#33553c" stroke-width="2"/>
+  <rect x="64" y="165" width="320" height="44" rx="8" fill="#33553c"/>
+  <text x="224" y="193" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="800" fill="#ffffff">HOST LEGÍTIMO (PUERTO Gi0/1)</text>
+  <text x="90" y="242" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="700" fill="#161513">Dirección BIA grabada en NIC:</text>
+  <text x="90" y="272" font-family="'JetBrains Mono', Consolas, monospace" font-size="16" font-weight="600" fill="#33553c">00:1A:2B:3C:4D:5E</text>
+  <text x="90" y="312" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#47423e">Conectado y operando en VLAN 10</text>
+
+  <!-- Attacker Spoofing -->
+  <rect x="64" y="390" width="320" height="205" rx="8" fill="#ffffff" stroke="#d63b25" stroke-width="2"/>
+  <rect x="64" y="390" width="320" height="44" rx="8" fill="#d63b25"/>
+  <text x="224" y="418" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="800" fill="#ffffff">ATACANTE CLONA MAC (PUERTO Gi0/7)</text>
+  <rect x="86" y="450" width="276" height="78" rx="6" fill="#161513"/>
+  <text x="100" y="476" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#ffffff">ip link set eth0 down</text>
+  <text x="100" y="498" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#f0cc71">ip link set eth0 address 00:1A:2B:3C:4D:5E</text>
+  <text x="100" y="518" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#ffffff">ip link set eth0 up</text>
+  <text x="224" y="564" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" font-weight="700" fill="#d63b25">Emite tramas con la misma SMAC</text>
+
+  <line x1="384" y1="258" x2="540" y2="290" stroke="#33553c" stroke-width="3" marker-end="url(#arr-forest)"/>
+  <line x1="384" y1="490" x2="540" y2="390" stroke="#d63b25" stroke-width="3" marker-end="url(#arr-danger)"/>
+
+  <!-- Switch experiencing MAC Flapping -->
+  <rect x="552" y="165" width="584" height="430" rx="8" fill="#ffffff" stroke="#312d2a" stroke-width="2"/>
+  <rect x="552" y="165" width="584" height="48" rx="8" fill="#312d2a"/>
+  <text x="844" y="195" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="17" font-weight="800" fill="#ffffff">CONSECUENCIAS EN EL CONMUTADOR</text>
+
+  <rect x="584" y="236" width="520" height="108" rx="6" fill="#f5f4f2" stroke="#d63b25" stroke-width="2"/>
+  <text x="608" y="268" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="17" font-weight="800" fill="#d63b25">Sin Port Security → MAC Flapping</text>
+  <text x="608" y="298" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" fill="#161513">00:1A:2B:3C:4D:5E : Gi0/1 ⇄ Gi0/7 (salta continuamente)</text>
+  <text x="608" y="326" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#47423e">El tráfico destinado a la víctima se desvía al puerto del atacante.</text>
+
+  <rect x="584" y="366" width="520" height="90" rx="6" fill="#f1efed"/>
+  <text x="608" y="398" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="800" fill="#161513">Riesgos encadenados</text>
+  <text x="608" y="424" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#161513">• Evasión de listas blancas MAC en DHCP / Firewalls</text>
+  <text x="608" y="446" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#161513">• Paso previo para ARP Poisoning y ataques Man-in-the-Middle</text>
+
+  <rect x="584" y="476" width="520" height="94" rx="6" fill="#d6e5e5" stroke="#33553c" stroke-width="2"/>
+  <text x="608" y="508" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="17" font-weight="800" fill="#33553c">Con Port Security → MAC Move Violation</text>
+  <text x="608" y="536" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#161513">Si 00:1A:2B:3C:4D:5E está asegurada en Gi0/1 y aparece en Gi0/7,</text>
+  <text x="608" y="556" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" font-weight="700" fill="#161513">el switch bloquea el puerto infractor de inmediato.</text>
+
+  <text x="1152" y="652" text-anchor="end" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#aea8a2">m1-mac-spoofing.svg</text>
+</svg>

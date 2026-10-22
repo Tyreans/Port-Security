@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675">
+  <title>Módulo 4: Defensa en profundidad en Capa 2</title>
+  <defs>
+    <marker id="arr-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#006b8f"/>
+    </marker>
+    <marker id="arr-danger" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d63b25"/>
+    </marker>
+    <marker id="arr-forest" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#33553c"/>
+    </marker>
+    <marker id="arr-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#312d2a"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="675" fill="#fbf9f8"/>
+  <rect x="48" y="36" width="40" height="4" fill="#f0cc71"/>
+  <text x="48" y="72" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="26" font-weight="800" fill="#161513">MÓDULO 4 · BUENAS PRÁCTICAS Y DEFENSA EN PROFUNDIDAD</text>
+  <text x="48" y="100" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="500" fill="#47423e">Pila de controles de endurecimiento del conmutador (Switch Hardening)</text>
+
+  <rect x="120" y="155" width="960" height="82" rx="8" fill="#33553c"/>
+  <text x="160" y="195" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="800" fill="#ffffff">CAPA 4 · IP SOURCE GUARD (IPSG)</text>
+  <text x="160" y="222" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#ffffff">Filtra paquetes IP en hardware validando la tupla MAC + IP + Puerto contra suplantación IP</text>
+
+  <rect x="120" y="252" width="960" height="82" rx="8" fill="#006b8f"/>
+  <text x="160" y="292" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="800" fill="#ffffff">CAPA 3 · DYNAMIC ARP INSPECTION (DAI)</text>
+  <text x="160" y="319" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#ffffff">Intercepta y descarta paquetes ARP falsos comparándolos contra la DHCP Snooping Binding Table</text>
+
+  <rect x="120" y="349" width="960" height="82" rx="8" fill="#312d2a"/>
+  <text x="160" y="389" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="800" fill="#f0cc71">CAPA 2 · DHCP SNOOPING (PILAR DE CORRELACIÓN)</text>
+  <text x="160" y="416" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#ffffff">Separa puertos Trusted / Untrusted, bloquea servidores DHCP falsos y construye la Binding Table</text>
+
+  <rect x="120" y="446" width="960" height="105" rx="8" fill="#ffffff" stroke="#312d2a" stroke-width="2"/>
+  <text x="160" y="484" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="800" fill="#161513">CAPA 1 · PORT SECURITY + DTP OFF + BLACKHOLE VLAN 999</text>
+  <text x="160" y="512" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#47423e">Controla MACs autorizadas y cuota por puerto, suprime negociación troncal (nonegotiate) y aísla puertos vacíos</text>
+  <text x="160" y="536" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" fill="#006b8f">switchport mode access · switchport nonegotiate · switchport port-security · spanning-tree bpduguard enable</text>
+
+  <text x="1152" y="652" text-anchor="end" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#aea8a2">m4-arquitectura-capa2.svg</text>
+</svg>

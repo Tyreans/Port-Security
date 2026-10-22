@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675">
+  <title>Funcionamiento de DHCP Snooping: puertos Trusted vs Untrusted y Binding Database</title>
+  <defs>
+    <marker id="arr-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#006b8f"/>
+    </marker>
+    <marker id="arr-danger" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d63b25"/>
+    </marker>
+    <marker id="arr-forest" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#33553c"/>
+    </marker>
+    <marker id="arr-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#312d2a"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="675" fill="#fbf9f8"/>
+  <rect x="48" y="36" width="40" height="4" fill="#f0cc71"/>
+  <text x="48" y="72" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="26" font-weight="800" fill="#161513">DHCP SNOOPING · PUERTOS TRUSTED VS. UNTRUSTED</text>
+  <text x="48" y="100" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="500" fill="#47423e">Bloquea servidores DHCP clandestinos y construye la tabla de enlaces (Binding Database)</text>
+
+  <!-- Legit DHCP Server (Top Left) -->
+  <rect x="64" y="150" width="280" height="175" rx="8" fill="#ffffff" stroke="#33553c" stroke-width="2"/>
+  <rect x="64" y="150" width="280" height="42" rx="8" fill="#33553c"/>
+  <text x="204" y="177" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="800" fill="#ffffff">SERVIDOR DHCP LEGÍTIMO</text>
+  <text x="204" y="224" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="700" fill="#33553c">Envía DHCP Offer / ACK</text>
+  <text x="204" y="254" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" fill="#161513">IP: 10.0.10.25</text>
+  <text x="204" y="280" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" fill="#33553c">Puerto Gi0/24: TRUSTED</text>
+
+  <line x1="344" y1="240" x2="490" y2="240" stroke="#33553c" stroke-width="4" marker-end="url(#arr-forest)"/>
+  <text x="417" y="224" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="13" font-weight="800" fill="#33553c">✓ PERMITIDO</text>
+
+  <!-- Rogue DHCP Server (Bottom Left) -->
+  <rect x="64" y="395" width="280" height="185" rx="8" fill="#ffffff" stroke="#d63b25" stroke-width="2"/>
+  <rect x="64" y="395" width="280" height="42" rx="8" fill="#d63b25"/>
+  <text x="204" y="422" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="800" fill="#ffffff">ATACANTE (ROGUE DHCP)</text>
+  <text x="204" y="468" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="700" fill="#d63b25">Envía DHCP Offer falso</text>
+  <text x="204" y="498" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="13" fill="#161513">Intenta repartir su propio Gateway</text>
+  <text x="204" y="528" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" fill="#d63b25">Puerto Gi0/5: UNTRUSTED</text>
+
+  <line x1="344" y1="485" x2="490" y2="485" stroke="#d63b25" stroke-width="4" marker-end="url(#arr-danger)"/>
+  <text x="417" y="468" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="13" font-weight="800" fill="#d63b25">✗ DESCARTADO</text>
+
+  <!-- Switch + Binding Table -->
+  <rect x="504" y="150" width="632" height="430" rx="8" fill="#ffffff" stroke="#312d2a" stroke-width="2"/>
+  <rect x="504" y="150" width="632" height="48" rx="8" fill="#312d2a"/>
+  <text x="820" y="180" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="17" font-weight="800" fill="#ffffff">SWITCH CON DHCP SNOOPING HABILITADO</text>
+
+  <text x="536" y="238" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="800" fill="#161513">Regla de filtrado:</text>
+  <text x="536" y="266" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#161513">• Los paquetes de servidor (Offer / ACK) solo se aceptan en puertos Trusted.</text>
+  <text x="536" y="294" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#161513">• Todo puerto de acceso de usuario final se declara Untrusted por defecto.</text>
+
+  <rect x="536" y="330" width="568" height="220" rx="6" fill="#f5f4f2" stroke="#006b8f" stroke-width="2"/>
+  <rect x="536" y="330" width="568" height="40" rx="6" fill="#006b8f"/>
+  <text x="820" y="356" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="800" fill="#ffffff">DHCP SNOOPING BINDING DATABASE (EN MEMORIA)</text>
+
+  <text x="556" y="402" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" font-weight="600" fill="#47423e">MAC Address        | IP Asignada  | Lease  | VLAN | Interfaz</text>
+  <line x1="556" y1="414" x2="1084" y2="414" stroke="#d4cfca"/>
+  <text x="556" y="442" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" fill="#33553c">00:50:56:BE:A1:B2  | 10.0.10.25   | 86400s | 10   | Gi0/1</text>
+  <text x="556" y="472" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" fill="#33553c">00:14:22:01:23:45  | 10.0.10.26   | 86400s | 10   | Gi0/2</text>
+  <text x="556" y="520" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" font-weight="700" fill="#006b8f">→ Sirve como fuente de verdad para DAI e IP Source Guard</text>
+
+  <text x="1152" y="652" text-anchor="end" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#aea8a2">m4-dhcp-snooping-trusted.svg</text>
+</svg>

@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" font-family="Inter, 'Segoe UI', system-ui, sans-serif">
+  <title>Vista frontal de un rack con un panel de parcheo y dos switches de acceso de 24 puertos; el switch central está resaltado y uno de sus puertos tiene un candado de Port Security</title>
+  <defs>
+    <g id="p">
+      <rect width="32" height="26" rx="3" fill="#312d2a"/>
+      <rect x="6" y="4" width="20" height="8" rx="1" fill="#47423e"/>
+      <rect x="9" y="16" width="14" height="6" fill="#161513"/>
+    </g>
+    <g id="k">
+      <rect width="32" height="22" rx="3" fill="#47423e"/>
+      <rect x="8" y="6" width="16" height="10" rx="1" fill="#161513"/>
+    </g>
+    <rect id="lg" width="12" height="5" rx="1" fill="#33553c"/>
+    <rect id="lo" width="12" height="5" rx="1" fill="#aea8a2"/>
+    <g id="sfp">
+      <rect width="36" height="22" rx="2" fill="#f1efed" stroke="#47423e" stroke-width="2"/>
+      <rect x="8" y="8" width="20" height="6" fill="#aea8a2"/>
+    </g>
+  </defs>
+  <rect width="1200" height="675" fill="#fbf9f8"/>
+
+  <!-- Rack -->
+  <rect x="190" y="80" width="820" height="520" fill="#f1efed"/>
+  <rect x="150" y="70" width="40" height="540" rx="8" fill="#312d2a"/>
+  <rect x="1010" y="70" width="40" height="540" rx="8" fill="#312d2a"/>
+  <g fill="#aea8a2">
+    <rect x="164" y="96" width="12" height="8" rx="2"/><rect x="164" y="132" width="12" height="8" rx="2"/><rect x="164" y="168" width="12" height="8" rx="2"/><rect x="164" y="204" width="12" height="8" rx="2"/><rect x="164" y="240" width="12" height="8" rx="2"/><rect x="164" y="276" width="12" height="8" rx="2"/><rect x="164" y="312" width="12" height="8" rx="2"/><rect x="164" y="348" width="12" height="8" rx="2"/><rect x="164" y="384" width="12" height="8" rx="2"/><rect x="164" y="420" width="12" height="8" rx="2"/><rect x="164" y="456" width="12" height="8" rx="2"/><rect x="164" y="492" width="12" height="8" rx="2"/><rect x="164" y="528" width="12" height="8" rx="2"/><rect x="164" y="564" width="12" height="8" rx="2"/>
+    <rect x="1024" y="96" width="12" height="8" rx="2"/><rect x="1024" y="132" width="12" height="8" rx="2"/><rect x="1024" y="168" width="12" height="8" rx="2"/><rect x="1024" y="204" width="12" height="8" rx="2"/><rect x="1024" y="240" width="12" height="8" rx="2"/><rect x="1024" y="276" width="12" height="8" rx="2"/><rect x="1024" y="312" width="12" height="8" rx="2"/><rect x="1024" y="348" width="12" height="8" rx="2"/><rect x="1024" y="384" width="12" height="8" rx="2"/><rect x="1024" y="420" width="12" height="8" rx="2"/><rect x="1024" y="456" width="12" height="8" rx="2"/><rect x="1024" y="492" width="12" height="8" rx="2"/><rect x="1024" y="528" width="12" height="8" rx="2"/><rect x="1024" y="564" width="12" height="8" rx="2"/>
+  </g>
+
+  <!-- U1: panel de parcheo -->
+  <rect x="200" y="110" width="800" height="120" rx="8" fill="#f5f4f2" stroke="#d4cfca" stroke-width="2"/>
+  <text x="222" y="178" font-family="'JetBrains Mono', Consolas, monospace" font-size="18" font-weight="500" fill="#47423e">PP-01</text>
+  <use href="#k" x="350" y="138"/><use href="#k" x="394" y="138"/><use href="#k" x="438" y="138"/><use href="#k" x="482" y="138"/><use href="#k" x="526" y="138"/><use href="#k" x="570" y="138"/><use href="#k" x="630" y="138"/><use href="#k" x="674" y="138"/><use href="#k" x="718" y="138"/><use href="#k" x="762" y="138"/><use href="#k" x="806" y="138"/><use href="#k" x="850" y="138"/>
+  <use href="#k" x="350" y="176"/><use href="#k" x="394" y="176"/><use href="#k" x="438" y="176"/><use href="#k" x="482" y="176"/><use href="#k" x="526" y="176"/><use href="#k" x="570" y="176"/><use href="#k" x="630" y="176"/><use href="#k" x="674" y="176"/><use href="#k" x="718" y="176"/><use href="#k" x="762" y="176"/><use href="#k" x="806" y="176"/><use href="#k" x="850" y="176"/>
+
+  <!-- U2: switch resaltado -->
+  <rect x="200" y="260" width="800" height="140" rx="8" fill="#ffffff" stroke="#006b8f" stroke-width="3"/>
+  <text x="222" y="318" font-family="'JetBrains Mono', Consolas, monospace" font-size="18" font-weight="600" fill="#161513">SW-ACC-01</text>
+  <circle cx="230" cy="348" r="5" fill="#33553c"/><circle cx="248" cy="348" r="5" fill="#33553c"/><circle cx="266" cy="348" r="5" fill="#aea8a2"/>
+  <use href="#p" x="350" y="298"/><use href="#p" x="394" y="298"/><use href="#p" x="438" y="298"/><use href="#p" x="482" y="298"/><use href="#p" x="526" y="298"/><use href="#p" x="570" y="298"/><use href="#p" x="630" y="298"/><use href="#p" x="674" y="298"/><use href="#p" x="718" y="298"/><use href="#p" x="762" y="298"/><use href="#p" x="806" y="298"/><use href="#p" x="850" y="298"/>
+  <use href="#p" x="350" y="346"/><use href="#p" x="394" y="346"/><use href="#p" x="438" y="346"/><use href="#p" x="482" y="346"/><use href="#p" x="526" y="346"/><use href="#p" x="570" y="346"/><use href="#p" x="630" y="346"/><use href="#p" x="674" y="346"/><use href="#p" x="718" y="346"/><use href="#p" x="762" y="346"/><use href="#p" x="806" y="346"/><use href="#p" x="850" y="346"/>
+  <use href="#lg" x="360" y="286"/><use href="#lg" x="404" y="286"/><use href="#lg" x="448" y="286"/><use href="#lg" x="492" y="286"/><use href="#lg" x="536" y="286"/><use href="#lg" x="580" y="286"/><use href="#lg" x="640" y="282"/><use href="#lg" x="684" y="286"/><use href="#lg" x="728" y="286"/><use href="#lg" x="772" y="286"/><use href="#lg" x="816" y="286"/><use href="#lg" x="860" y="286"/>
+  <use href="#lg" x="360" y="334"/><use href="#lg" x="404" y="334"/><use href="#lg" x="448" y="334"/><use href="#lg" x="492" y="334"/><use href="#lg" x="536" y="334"/><use href="#lg" x="580" y="334"/><use href="#lg" x="640" y="334"/><use href="#lg" x="684" y="334"/><use href="#lg" x="728" y="334"/><use href="#lg" x="772" y="334"/><use href="#lg" x="816" y="334"/><use href="#lg" x="860" y="334"/>
+  <!-- candado -->
+  <path d="M640,306 v-6 a6,6 0 0 1 12,0 v6" fill="none" stroke="#161513" stroke-width="2"/>
+  <rect x="634" y="305" width="24" height="18" rx="3" fill="#f0cc71" stroke="#161513" stroke-width="2"/>
+  <rect x="644" y="310" width="4" height="7" rx="1" fill="#161513"/>
+  <use href="#sfp" x="912" y="300"/><use href="#sfp" x="956" y="300" transform="translate(-4 0)"/>
+  <use href="#sfp" x="912" y="348"/><use href="#sfp" x="956" y="348" transform="translate(-4 0)"/>
+
+  <!-- U3: switch secundario -->
+  <rect x="200" y="430" width="800" height="140" rx="8" fill="#f5f4f2" stroke="#d4cfca" stroke-width="2"/>
+  <text x="222" y="488" font-family="'JetBrains Mono', Consolas, monospace" font-size="18" font-weight="500" fill="#47423e">SW-ACC-02</text>
+  <circle cx="230" cy="518" r="5" fill="#33553c"/><circle cx="248" cy="518" r="5" fill="#aea8a2"/><circle cx="266" cy="518" r="5" fill="#aea8a2"/>
+  <use href="#p" x="350" y="468"/><use href="#p" x="394" y="468"/><use href="#p" x="438" y="468"/><use href="#p" x="482" y="468"/><use href="#p" x="526" y="468"/><use href="#p" x="570" y="468"/><use href="#p" x="630" y="468"/><use href="#p" x="674" y="468"/><use href="#p" x="718" y="468"/><use href="#p" x="762" y="468"/><use href="#p" x="806" y="468"/><use href="#p" x="850" y="468"/>
+  <use href="#p" x="350" y="516"/><use href="#p" x="394" y="516"/><use href="#p" x="438" y="516"/><use href="#p" x="482" y="516"/><use href="#p" x="526" y="516"/><use href="#p" x="570" y="516"/><use href="#p" x="630" y="516"/><use href="#p" x="674" y="516"/><use href="#p" x="718" y="516"/><use href="#p" x="762" y="516"/><use href="#p" x="806" y="516"/><use href="#p" x="850" y="516"/>
+  <use href="#lg" x="360" y="456"/><use href="#lg" x="404" y="456"/><use href="#lo" x="448" y="456"/><use href="#lg" x="492" y="456"/><use href="#lo" x="536" y="456"/><use href="#lg" x="580" y="456"/><use href="#lg" x="640" y="456"/><use href="#lo" x="684" y="456"/><use href="#lg" x="728" y="456"/><use href="#lo" x="772" y="456"/><use href="#lo" x="816" y="456"/><use href="#lg" x="860" y="456"/>
+  <use href="#lo" x="360" y="504"/><use href="#lg" x="404" y="504"/><use href="#lg" x="448" y="504"/><use href="#lo" x="492" y="504"/><use href="#lg" x="536" y="504"/><use href="#lo" x="580" y="504"/><use href="#lo" x="640" y="504"/><use href="#lg" x="684" y="504"/><use href="#lo" x="728" y="504"/><use href="#lg" x="772" y="504"/><use href="#lg" x="816" y="504"/><use href="#lo" x="860" y="504"/>
+  <use href="#sfp" x="912" y="470"/><use href="#sfp" x="952" y="470"/>
+  <use href="#sfp" x="912" y="518"/><use href="#sfp" x="952" y="518"/>
+</svg>

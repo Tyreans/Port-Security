@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- TODO(security): frame-ancestors, X-Frame-Options y X-Content-Type-Options no se pueden declarar en <meta>; configúralos como cabeceras HTTP si el sitio se publica en un hosting. -->
+  <!-- TODO(security): Google Fonts no admite SRI (la hoja cambia según el navegador). Se acepta porque solo entrega CSS y fuentes, nunca scripts. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; manifest-src 'self'; worker-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="description" content="Módulo 2: mecanismos de aprendizaje y validación de direcciones MAC. Static, Dynamic y Sticky, límite maximum y envejecimiento.">
+  <meta name="theme-color" content="#211e1c">
+  <title>Módulo 2 · Mecanismos de aprendizaje y validación MAC · Port Security</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="assets/js/sw-register.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <header class="masthead">
+    <div class="container">
+      <a class="wordmark" href="index.html">Port Security</a>
+      <span class="masthead__meta">Tyreans Dev · Seguridad en Capa 2</span>
+    </div>
+  </header>
+
+  <nav class="subnav" aria-label="Módulos">
+    <div class="container">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="modulo-1-fundamentos.html">1 · Fundamentos</a></li>
+        <li><a href="modulo-2-aprendizaje.html" aria-current="page">2 · Aprendizaje MAC</a></li>
+        <li><a href="modulo-3-violaciones.html">3 · Violaciones</a></li>
+        <li><a href="modulo-4-buenas-practicas.html">4 · Buenas prácticas</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="contenido">
+    <section class="hero">
+      <div class="container hero__grid">
+        <div>
+          <p class="hero__kicker">Módulo 2</p>
+          <h1 class="display-serif-xl">Mecanismos de aprendizaje y validación de direcciones MAC</h1>
+          <hr class="eyebrow-rule">
+          <p class="lead">Cómo distingue el conmutador entre un dispositivo legítimo y un intruso: almacenamiento volátil vs. no volátil, límites de cuota y temporizadores de caducidad.</p>
+        </div>
+        <figure class="figure">
+          <img src="assets/img/m2-metodos-aprendizaje.svg" width="1200" height="675" alt="Comparativa de los tres métodos de registro en Port Security: Estática, Dinámica y Persistente (Sticky).">
+        </figure>
+      </div>
+    </section>
+
+    <!-- 1. Arquitectura de validación -->
+    <section class="band band--white">
+      <div class="container">
+        <div class="split">
+          <div class="prose">
+            <h2 class="display-serif-md">1. Arquitectura de validación en el switch</h2>
+            <p>Cuando se habilita <em>Port Security</em> en una interfaz, el conmutador altera su comportamiento habitual de conmutación abierta:</p>
+            <ol>
+              <li><strong>Pasa a conmutación restringida:</strong> el puerto establece una lista de control de acceso a nivel físico (<em>Secure MAC Address Table</em>).</li>
+              <li><strong>Crea un subregistro en memoria:</strong> además de la tabla CAM global, el plano de control mantiene una tabla de direcciones seguras asociadas a cada puerto.</li>
+              <li><strong>Evalúa cada trama entrante:</strong> toda trama cuyo remitente (SMAC) no coincida con una entrada autorizada o que pretenda exceder el cupo máximo se tipifica como una violación de seguridad.</li>
+            </ol>
+          </div>
+          <figure class="figure">
+            <img src="assets/img/m2-memoria-ram-nvram.svg" width="1200" height="675" alt="Diagrama de memoria RAM (running-config y tabla CAM segura) frente a memoria NVRAM (startup-config) y el comando write memory.">
+            <figcaption>Persistencia en memoria volátil (RAM) frente a no volátil (NVRAM).</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Mecanismos de aprendizaje -->
+    <section class="band band--soft">
+      <div class="container">
+        <div class="section-intro">
+          <h2 class="display-serif-md">2. Los tres métodos de aprendizaje</h2>
+          <p>Cisco IOS dispone de tres métodos para poblar y validar la lista de direcciones seguras, cada uno con propiedades distintas de almacenamiento, persistencia y carga operativa.</p>
+        </div>
+
+        <div class="grid grid--3">
+          <article class="card card--line">
+            <span class="card__tag">1 · Rigor administrativo</span>
+            <h3 class="heading-lg">Estática (<em>Static</em>)</h3>
+            <p>El ingeniero vincula manualmente una dirección física específica a la interfaz mediante CLI:</p>
+            <pre class="cli"><code>switchport port-security
+ mac-address 0011.2233.4455</code></pre>
+            <ul>
+              <li><strong>Ubicación:</strong> <code>running-config</code> (RAM).</li>
+              <li><strong>Persistencia al reiniciar:</strong> Sí, tras ejecutar <code>write memory</code> (NVRAM).</li>
+              <li><strong>Ante link-down:</strong> permanece registrada.</li>
+              <li><strong>Envejecimiento:</strong> no caduca por defecto.</li>
+              <li><strong>Ventaja:</strong> control total; inmune a que un intruso se adelante al encender.</li>
+              <li><strong>Desventaja:</strong> nula escalabilidad en redes de cientos de equipos.</li>
+            </ul>
+          </article>
+
+          <article class="card card--line">
+            <span class="card__tag">2 · Por defecto</span>
+            <h3 class="heading-lg">Dinámica (<em>Dynamic</em>)</h3>
+            <p>Comportamiento predeterminado al activar <code>switchport port-security</code>. El switch aprende la SMAC del primer host que transmita.</p>
+            <pre class="cli"><code>switchport port-security</code></pre>
+            <ul>
+              <li><strong>Ubicación:</strong> solo en la tabla CAM segura (RAM). Nunca va a <code>running-config</code>.</li>
+              <li><strong>Persistencia al reiniciar:</strong> <strong>No</strong>. Se borra por completo.</li>
+              <li><strong>Ante link-down:</strong> <strong>se elimina de inmediato</strong> al desconectar el cable.</li>
+              <li><strong>Envejecimiento:</strong> admite temporizadores de <em>aging</em>.</li>
+              <li><strong>Riesgo crítico:</strong> tras un apagón nocturno, el primer equipo que conecte por la mañana se adueña del puerto.</li>
+            </ul>
+          </article>
+
+          <article class="card card--line">
+            <span class="card__tag">3 · Equilibrio corporativo</span>
+            <h3 class="heading-lg">Persistente (<em>Sticky</em>)</h3>
+            <p>Aprende dinámicamente la primera dirección MAC y la convierte de inmediato en una línea estática dentro de la <code>running-config</code>:</p>
+            <pre class="cli"><code>switchport port-security
+ mac-address sticky</code></pre>
+            <ul>
+              <li><strong>Autogenera en CLI:</strong> <code>...mac-address sticky 0050.56be.a1b2</code>.</li>
+              <li><strong>Persistencia al reiniciar:</strong> Sí, <strong>siempre que se guarde en NVRAM</strong> (<code>copy run start</code>).</li>
+              <li><strong>Ante link-down:</strong> no se borra al desconectar el cable.</li>
+              <li><strong>Envejecimiento:</strong> no envejece por diseño estándar.</li>
+              <li><strong>Ventaja:</strong> permite asegurar cientos de puertos en minutos sin inventariar MACs a mano.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Matriz comparativa -->
+    <section class="band band--white">
+      <div class="container">
+        <h2 class="display-serif-md">3. Matriz comparativa de mecanismos de aprendizaje</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Parámetro</th>
+                <th scope="col">MAC Estática (Static)</th>
+                <th scope="col">MAC Dinámica (Dynamic)</th>
+                <th scope="col">MAC Persistente (Sticky)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Comando de activación</th><td><code>switchport port-security mac-address &lt;MAC&gt;</code></td><td><code>switchport port-security</code></td><td><code>switchport port-security mac-address sticky</code></td></tr>
+              <tr><th scope="row">Intervención del administrador</th><td>Manual por cada dirección (Alta)</td><td>Nula (Automática)</td><td>Mínima (Solo guardar config)</td></tr>
+              <tr><th scope="row">Ubicación en memoria</th><td><code>running-config</code> (RAM)</td><td>Tabla CAM segura (RAM)</td><td><code>running-config</code> (RAM)</td></tr>
+              <tr><th scope="row">¿Aparece en running-config?</th><td class="yes">Sí</td><td class="no">No</td><td class="yes">Sí (autogenerada)</td></tr>
+              <tr><th scope="row">¿Persiste tras reiniciar?</th><td class="yes">Sí (tras <code>write memory</code>)</td><td class="no">No (se pierde siempre)</td><td class="yes">Sí (tras <code>write memory</code>)</td></tr>
+              <tr><th scope="row">Comportamiento ante link-down</th><td>Se mantiene en memoria</td><td class="no">Se elimina de la tabla</td><td>Se mantiene en memoria</td></tr>
+              <tr><th scope="row">Sujeto a temporizadores de Aging</th><td>No (salvo comando explícito)</td><td>Sí (si se configura <em>aging</em>)</td><td>No por defecto</td></tr>
+              <tr><th scope="row">Escenario recomendado</th><td>Servidores centrales, firewalls, impresoras fijas</td><td>Control de cuota temporal en salas de cómputo</td><td>Puestos de trabajo de oficina y cubículos</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Límite maximum y telefonía IP -->
+    <section class="band band--tint">
+      <div class="container">
+        <div class="split">
+          <div class="prose">
+            <h2 class="display-serif-md">4. Límite de direcciones simultáneas (<code>maximum</code>)</h2>
+            <p>El parámetro <code>maximum</code> define cuántas direcciones MAC seguras (sumando estáticas, dinámicas y <em>sticky</em>) pueden transmitir por la interfaz antes de disparar una violación.</p>
+            <ul>
+              <li><strong>Valor por defecto:</strong> estrictamente <strong>1</strong> (<code>maximum 1</code>).</li>
+              <li><strong>Rango configurable:</strong> de <strong>1 a 4,097</strong> direcciones según la plataforma (Catalyst 2960 vs. Catalyst 6500 / 9000).</li>
+            </ul>
+            <h3 class="heading-md">El caso real de la telefonía IP</h3>
+            <p>En oficinas es estándar conectar la PC al puerto auxiliar de un teléfono IP, y el teléfono a la toma de pared. Con <code>maximum 1</code>, en cuanto el teléfono registra su MAC en la VLAN de voz y la PC intenta navegar en la VLAN de datos, el switch detecta <strong>dos MAC distintas</strong> y bloquea el puerto.</p>
+            <pre class="cli"><code><span class="p">Switch(config-if)#</span> switchport port-security maximum 2</code></pre>
+            <p class="caption">Nota de ingeniería: en plataformas como Catalyst 6500 (Sup 6T) o Catalyst 9000, el switch usa CDP (<em>host presence TLV</em>) para purgar únicamente la MAC de la PC cuando se desconecta del teléfono, sin afectar la llamada.</p>
+          </div>
+          <figure class="figure">
+            <img src="assets/img/m2-telefonia-ip-maximum2.svg" width="1200" height="675" alt="PC en VLAN 10 de datos conectada a un teléfono IP Cisco en VLAN 150 de voz hacia el puerto Fa0/1. Con maximum 1 ocurre violación; con maximum 2 ambas MAC operan.">
+            <figcaption>Topología de voz y datos en un mismo puerto físico.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Envejecimiento (Aging) -->
+    <section class="band band--soft">
+      <div class="container">
+        <div class="section-intro">
+          <h2 class="display-serif-md">5. Temporizadores de envejecimiento (<em>Aging</em>)</h2>
+          <p>Por defecto, las direcciones seguras no caducan (<code>Aging Time: 0 mins</code>). En laboratorios universitarios o salas de reuniones donde los usuarios rotan, se programa su expiración automática:</p>
+        </div>
+
+        <pre class="cli"><code><span class="p">Switch(config-if)#</span> switchport port-security aging time &lt;1-1440&gt;
+<span class="p">Switch(config-if)#</span> switchport port-security aging type {absolute | inactivity}</code></pre>
+
+        <div class="split" style="margin-top: var(--s-xxxl);">
+          <div class="grid">
+            <div class="card card--line">
+              <span class="card__tag">Tipo por defecto</span>
+              <h3 class="heading-md">5.1 Modo Absoluto (<em>Absolute</em>)</h3>
+              <p>Cuenta regresiva estricta desde que se aprende la MAC. Al cumplirse el tiempo (p. ej. 60 min), <strong>la MAC se elimina aunque el host siga transmitiendo activamente</strong>. Un milisegundo después vuelve a aprenderse si el equipo sigue enviando tráfico.</p>
+            </div>
+            <div class="card card--line">
+              <span class="card__tag">Temporizador de inactividad</span>
+              <h3 class="heading-md">5.2 Modo Inactividad (<em>Inactivity</em>)</h3>
+              <p>Cada trama legítima recibida <strong>reinicia el reloj a cero</strong>. La dirección solo se purga si el host permanece en silencio durante todo el intervalo configurado (por ejemplo, cuando el usuario apaga su laptop).</p>
+            </div>
+          </div>
+          <figure class="figure">
+            <img src="assets/img/m2-aging-absolute-vs-inactivity.svg" width="1200" height="675" alt="Línea de tiempo comparando el envejecimiento absoluto, que expira a los 60 minutos aunque haya tráfico, contra el de inactividad, que se reinicia con cada trama.">
+            <figcaption>Comparación temporal entre Absolute e Inactivity aging.</figcaption>
+          </figure>
+        </div>
+
+        <div class="card card--warm" style="margin-top: var(--s-xxxl);">
+          <h3 class="heading-sm">5.3 Regla crítica de aplicabilidad</h3>
+          <p>El envejecimiento aplica <strong>estrictamente a direcciones aprendidas dinámicamente</strong> (<code>SecureDynamic</code>). Las direcciones <strong>Sticky</strong> y <strong>Static</strong> nunca envejecen de forma automática en la configuración estándar.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Sintaxis y diagnóstico -->
+    <section class="band band--white">
+      <div class="container">
+        <h2 class="display-serif-md">6. Sintaxis de configuración y diagnóstico en Cisco IOS</h2>
+        <div class="grid grid--2">
+          <div>
+            <h3 class="heading-md">6.1 Acceso con Sticky y límite de 2 hosts</h3>
+            <pre class="cli"><code><span class="p">Switch#</span> configure terminal
+<span class="p">Switch(config)#</span> interface gigabitEthernet 0/1
+<span class="p">Switch(config-if)#</span> switchport mode access
+<span class="p">Switch(config-if)#</span> switchport port-security
+<span class="p">Switch(config-if)#</span> switchport port-security maximum 2
+<span class="p">Switch(config-if)#</span> switchport port-security mac-address sticky
+<span class="p">Switch(config-if)#</span> end
+<span class="p">Switch#</span> copy running-config startup-config</code></pre>
+
+            <h3 class="heading-md">6.2 Envejecimiento por inactividad</h3>
+            <pre class="cli"><code><span class="p">Switch(config)#</span> interface gigabitEthernet 0/2
+<span class="p">Switch(config-if)#</span> switchport mode access
+<span class="p">Switch(config-if)#</span> switchport port-security
+<span class="p">Switch(config-if)#</span> switchport port-security maximum 1
+<span class="p">Switch(config-if)#</span> switchport port-security aging time 30
+<span class="p">Switch(config-if)#</span> switchport port-security aging type inactivity
+<span class="p">Switch(config-if)#</span> end</code></pre>
+          </div>
+
+          <div>
+            <h3 class="heading-md">6.3 Verificación de estado y tabla segura</h3>
+            <pre class="cli"><code><span class="p">Switch#</span> show port-security interface gigabitEthernet 0/1
+Port Security              : Enabled
+Port Status                : Secure-up
+Maximum MAC Addresses      : 2
+Total MAC Addresses        : 1
+Configured MAC Addresses   : 1</code></pre>
+
+            <pre class="cli"><code><span class="p">Switch#</span> show port-security address
+               Secure Mac Address Table
+-------------------------------------------------------------------
+Vlan    Mac Address       Type                Ports   Remaining Age
+                                                         (mins)
+----    -----------       ----                -----   -------------
+   1    0050.56be.a1b2    SecureSticky        Gi0/1        -
+   1    0014.2201.2345    SecureDynamic       Gi0/2       18 (I)
+-------------------------------------------------------------------</code></pre>
+            <p class="caption">La entrada <code>SecureSticky</code> no tiene tiempo restante (<code>-</code>), mientras que <code>SecureDynamic</code> muestra <code>18 (I)</code> por inactividad.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Preguntas detonadoras -->
+    <section class="band band--forest">
+      <div class="container container--narrow">
+        <h2 class="display-serif-md">7. Preguntas detonadoras</h2>
+        <details class="qa">
+          <summary>El reinicio de medianoche</summary>
+          <p class="qa__q">«Si configuramos un switch con direcciones dinámicas y a medianoche ocurre un apagón eléctrico, ¿qué riesgo existe a las 6:00 AM si alguien conecta una laptop infectada antes de que llegue el personal a las 8:00 AM?»</p>
+          <p class="qa__a"><strong>Respuesta esperada:</strong> como las MAC dinámicas viven solo en RAM, el apagón vació la tabla. La laptop conectada a las 6:00 AM será la primera en transmitir, se registrará como la única MAC válida y dejará bloqueado al usuario legítimo cuando encienda su equipo.</p>
+        </details>
+        <details class="qa">
+          <summary>La ilusión de seguridad de Sticky</summary>
+          <p class="qa__q">«Un administrador activa mac-address sticky un viernes, verifica que todas las MAC aparecen en show running-config y se va a casa sin ejecutar más comandos. ¿Por qué la red NO está protegida de forma definitiva?»</p>
+          <p class="qa__a"><strong>Respuesta esperada:</strong> porque las direcciones <em>sticky</em> se inyectan en la <code>running-config</code> (RAM). Si no se ejecuta <code>write memory</code> o <code>copy running-config startup-config</code>, cualquier reinicio cargará la NVRAM sin ninguna de las MAC aprendidas.</p>
+        </details>
+        <div class="myth">
+          <h3 class="heading-md">Confusión frecuente a despejar</h3>
+          <p><strong>Mito:</strong> «El Aging Time de Port Security es el mismo temporizador de 300 segundos de la tabla CAM estándar».</p>
+          <p><strong>Aclaración:</strong> son independientes. La tabla CAM estándar purga entradas a los 300 segundos para adaptarse a cambios topológicos; el <em>Aging</em> de Port Security (1 a 1440 minutos) destruye el permiso de acceso de un host seguro para obligar a revalidar o liberar el cupo.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Conclusión -->
+    <section class="band band--warm">
+      <div class="container container--narrow">
+        <h2 class="display-serif-md">8. Conclusión</h2>
+        <p class="lead">Elegir entre <strong>Estática</strong> (infraestructura crítica fija), <strong>Dinámica</strong> (rotación constante con <em>aging</em>) y <strong>Sticky</strong> (despliegue corporativo masivo) equilibra la seguridad estricta con la viabilidad operativa.</p>
+        <p>En el siguiente módulo se analiza qué ocurre cuando un dispositivo rompe estas reglas: los modos de violación y el estado <code>err-disabled</code>.</p>
+        <div class="pager btn-row">
+          <a class="btn btn--secondary" href="modulo-1-fundamentos.html">← Módulo 1 · Fundamentos</a>
+          <a class="btn btn--primary" href="modulo-3-violaciones.html">Módulo 3 · Violaciones →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Exposición dirigida por <strong>Tyreans Dev</strong> · Conmutación y Enrutamiento en Redes de Datos (SCD-1004) · Unidad 2: Conmutación LAN</p>
+      <nav aria-label="Fuentes">
+        <a href="https://info.support.huawei.com/info-finder/encyclopedia/en/Port+Security.html" rel="noopener">Huawei</a>
+        <a href="https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst6500/ios/15-4SY/config_guide/sup6T/15_3_sy_swcg_6T/port_security.pdf" rel="noopener">Cisco Sup 6T 15.4SY · Cap. 85</a>
+        <a href="https://www.geeksforgeeks.org/computer-networks/port-security-in-computer-network/" rel="noopener">GeeksforGeeks</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

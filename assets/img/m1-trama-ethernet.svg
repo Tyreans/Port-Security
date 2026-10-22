@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675">
+  <title>Estructura de la trama Ethernet IEEE 802.3 y ausencia de autenticación de origen</title>
+  <defs>
+    <marker id="arr-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#006b8f"/>
+    </marker>
+    <marker id="arr-danger" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d63b25"/>
+    </marker>
+    <marker id="arr-forest" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#33553c"/>
+    </marker>
+    <marker id="arr-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#312d2a"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="675" fill="#fbf9f8"/>
+  <rect x="48" y="36" width="40" height="4" fill="#f0cc71"/>
+  <text x="48" y="72" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="26" font-weight="800" fill="#161513">ESTRUCTURA DE LA TRAMA ETHERNET II (IEEE 802.3)</text>
+  <text x="48" y="100" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="500" fill="#47423e">El encabezado declara quién envía (SMAC), pero carece de firma o certificado que lo compruebe</text>
+
+  <!-- Frame blocks -->
+  <rect x="60" y="190" width="130" height="110" rx="6" fill="#f1efed" stroke="#d4cfca" stroke-width="2"/>
+  <text x="125" y="238" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="800" fill="#47423e">Preámbulo</text>
+  <text x="125" y="266" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" fill="#47423e">8 Bytes</text>
+
+  <rect x="198" y="190" width="190" height="110" rx="6" fill="#ffffff" stroke="#312d2a" stroke-width="2"/>
+  <text x="293" y="235" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="17" font-weight="800" fill="#161513">MAC Destino (DMAC)</text>
+  <text x="293" y="264" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" fill="#006b8f">6 Bytes (48 bits)</text>
+
+  <rect x="396" y="182" width="210" height="126" rx="8" fill="#ffffff" stroke="#d63b25" stroke-width="3"/>
+  <rect x="396" y="182" width="210" height="32" rx="6" fill="#d63b25"/>
+  <text x="501" y="203" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="13" font-weight="800" fill="#ffffff">SIN AUTENTICACIÓN</text>
+  <text x="501" y="246" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="17" font-weight="800" fill="#161513">MAC Origen (SMAC)</text>
+  <text x="501" y="274" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" fill="#d63b25">6 Bytes (48 bits)</text>
+
+  <rect x="614" y="190" width="130" height="110" rx="6" fill="#ffffff" stroke="#312d2a" stroke-width="2"/>
+  <text x="679" y="238" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="800" fill="#161513">EtherType</text>
+  <text x="679" y="266" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" fill="#47423e">2 Bytes</text>
+
+  <rect x="752" y="190" width="260" height="110" rx="6" fill="#f5f4f2" stroke="#d4cfca" stroke-width="2"/>
+  <text x="882" y="238" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="17" font-weight="800" fill="#161513">Datos / Payload (IP, ARP)</text>
+  <text x="882" y="266" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" fill="#47423e">46 – 1500 Bytes</text>
+
+  <rect x="1020" y="190" width="120" height="110" rx="6" fill="#f1efed" stroke="#d4cfca" stroke-width="2"/>
+  <text x="1080" y="238" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="800" fill="#47423e">FCS (CRC)</text>
+  <text x="1080" y="266" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" fill="#47423e">4 Bytes</text>
+
+  <!-- Callout from SMAC -->
+  <line x1="501" y1="308" x2="501" y2="385" stroke="#d63b25" stroke-width="3" marker-end="url(#arr-danger)"/>
+
+  <rect x="140" y="395" width="920" height="190" rx="8" fill="#ffffff" stroke="#d63b25" stroke-width="2"/>
+  <text x="180" y="438" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="800" fill="#d63b25">¿Por qué el switch confía ciegamente en el campo SMAC?</text>
+  <text x="180" y="476" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" fill="#161513">1. La trama Ethernet no incluye firma criptográfica, token ni certificado de origen.</text>
+  <text x="180" y="510" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" fill="#161513">2. Cualquier sistema operativo puede reescribir por software la SMAC enviada en menos de 10 segundos.</text>
+  <text x="180" y="544" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#161513">3. Sin Port Security, el switch registra en su tabla CAM cualquier SMAC que ingrese por el puerto.</text>
+
+  <text x="1152" y="652" text-anchor="end" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#aea8a2">m1-trama-ethernet.svg</text>
+</svg>

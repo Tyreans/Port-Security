@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- TODO(security): frame-ancestors, X-Frame-Options y X-Content-Type-Options no se pueden declarar en <meta>; configúralos como cabeceras HTTP si el sitio se publica en un hosting. -->
+  <!-- TODO(security): Google Fonts no admite SRI (la hoja cambia según el navegador). Se acepta porque solo entrega CSS y fuentes, nunca scripts. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; manifest-src 'self'; worker-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="description" content="Port Security: exposición académica sobre la defensa de la Capa de Enlace en conmutadores Cisco. Resumen del proyecto y acceso a los cuatro módulos.">
+  <meta name="theme-color" content="#211e1c">
+  <title>Port Security · Defensa en la Capa de Enlace</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="assets/js/sw-register.js" defer></script>
+</head>
+<body class="page-index">
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <header class="masthead">
+    <div class="container">
+      <a class="wordmark" href="index.html">Port Security</a>
+      <span class="masthead__meta">Tyreans Dev · Seguridad en Capa 2</span>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container hero__grid">
+        <div>
+          <p class="hero__kicker">Conmutación y Enrutamiento en Redes de Datos · Unidad 2</p>
+          <h1 class="display-sans-lg">Port Security: defensa en la Capa de Enlace</h1>
+          <hr class="eyebrow-rule">
+          <p class="lead">La seguridad de una red no empieza en el firewall. Empieza en cada toma de red y en cada interfaz física del switch.</p>
+          <div class="btn-row">
+            <a class="btn btn--primary" href="modulo-1-fundamentos.html">Comenzar por el Módulo 1</a>
+            <a class="btn btn--secondary" href="#modulos">Ver los cuatro módulos</a>
+          </div>
+        </div>
+        <figure class="figure figure--xl">
+          <img src="assets/img/hero-switch-rack.svg" width="1200" height="675" alt="Switch de acceso de 24 puertos montado en rack, con un puerto protegido por candado.">
+        </figure>
+      </div>
+    </section>
+
+    <!-- Accesos rápidos -->
+    <section class="band band--warm" aria-label="Accesos rápidos a los módulos">
+      <div class="container">
+        <nav class="tiles">
+          <a class="nav-tile" href="modulo-1-fundamentos.html">Módulo 1 · Fundamentos <span>Vectores de ataque en Capa 2</span></a>
+          <a class="nav-tile" href="modulo-2-aprendizaje.html">Módulo 2 · Aprendizaje MAC <span>Static, Dynamic y Sticky</span></a>
+          <a class="nav-tile" href="modulo-3-violaciones.html">Módulo 3 · Violaciones <span>Protect, Restrict, Shutdown</span></a>
+          <a class="nav-tile" href="modulo-4-buenas-practicas.html">Módulo 4 · Buenas prácticas <span>Hardening del switch</span></a>
+        </nav>
+      </div>
+    </section>
+
+    <!-- Premisa -->
+    <section class="band band--teal">
+      <div class="container">
+        <blockquote class="quote">
+          «La Capa de Enlace de Datos no fue diseñada pensando en la hostilidad de los entornos modernos. Asume confianza absoluta. Si un puerto de acceso no está protegido, la red local no tiene barreras frente a intrusos internos.»
+          <cite>Premisa central de la exposición</cite>
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- Resumen del proyecto -->
+    <section class="band band--warm">
+      <div class="container">
+        <div class="content-card">
+          <div class="split">
+            <div>
+              <h2 class="display-sans-md">Resumen del proyecto</h2>
+              <p><strong>El problema.</strong> Ethernet heredó un modelo de confianza ciega: la trama no autentica su dirección MAC de origen y el switch acepta cualquier identidad que llegue por un puerto. Además, la tabla CAM donde el switch memoriza las direcciones es un recurso físico finito. Quien conecte un equipo a una toma de pared desprotegida puede saturarla, espiar el tráfico o suplantar a otros equipos.</p>
+              <p><strong>La solución.</strong> <em>Port Security</em> convierte cada puerto de acceso en un punto de control. Limita cuántas direcciones MAC puede usar el puerto, decide cuáles están autorizadas (estáticas, dinámicas o <em>sticky</em>) y define qué hace el switch cuando se rompe la política: descartar, alertar o apagar el puerto.</p>
+              <p><strong>El enfoque.</strong> Port Security es la base, pero no basta por sí solo. La exposición termina con las prácticas de <em>defensa en profundidad</em> que lo complementan: VLAN de aislamiento, supresión de DTP, DHCP Snooping, Dynamic ARP Inspection e IP Source Guard.</p>
+            </div>
+            <aside class="stat-panel" aria-label="Cifras clave">
+              <h3 class="heading-sm">Cifras clave</h3>
+              <ul>
+                <li><strong>8,192–16,384</strong> entradas típicas de la tabla CAM en un switch de acceso.</li>
+                <li><strong>50k–150k</strong> tramas falsas por segundo que puede generar <code>macof</code>.</li>
+                <li><strong>300 s</strong> de envejecimiento por defecto de una entrada CAM dinámica.</li>
+                <li><strong>1</strong> dirección MAC permitida por defecto (<code>maximum 1</code>).</li>
+                <li><strong>Shutdown</strong> es el modo de violación de fábrica (puerto en <code>err-disabled</code>).</li>
+              </ul>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Módulos -->
+    <section class="band band--warm" id="modulos">
+      <div class="container">
+        <div class="section-intro">
+          <h2 class="display-sans-lg">Los cuatro módulos</h2>
+          <p>Cada módulo parte del anterior: primero el riesgo, luego cómo el switch reconoce a los equipos legítimos, después cómo reacciona ante un intruso y, al final, cómo endurecer el puerto por completo.</p>
+        </div>
+        <div class="grid grid--2">
+          <article class="content-card">
+            <figure class="figure figure--xl"><img src="assets/img/card-m1.svg" width="1200" height="675" alt="Laptop atacante inundando un switch con tramas de direcciones MAC falsas."></figure>
+            <h3 class="heading-card">Módulo 1 · Fundamentos y vectores de ataque en Capa 2</h3>
+            <p>Por qué un switch sin Port Security falla ante la inundación de la tabla MAC, la conexión de dispositivos no autorizados y la suplantación de MAC. Incluye cómo funciona la memoria CAM y el modo <em>fail-open</em> que convierte un switch en un hub.</p>
+            <div class="btn-row"><a class="btn btn--primary" href="modulo-1-fundamentos.html">Ver módulo 1</a></div>
+          </article>
+          <article class="content-card">
+            <figure class="figure figure--xl"><img src="assets/img/card-m2.svg" width="1200" height="675" alt="Direcciones Static, Dynamic y Sticky entrando a la tabla segura de un puerto."></figure>
+            <h3 class="heading-card">Módulo 2 · Mecanismos de aprendizaje y validación MAC</h3>
+            <p>Cómo el switch memoriza los equipos autorizados mediante direcciones estáticas, dinámicas y <em>sticky</em>: dónde se guardan, si sobreviven a un reinicio y cuándo conviene cada una. También cubre el límite <code>maximum</code> y el envejecimiento <em>absolute</em> e <em>inactivity</em>.</p>
+            <div class="btn-row"><a class="btn btn--primary" href="modulo-2-aprendizaje.html">Ver módulo 2</a></div>
+          </article>
+          <article class="content-card">
+            <figure class="figure figure--xl"><img src="assets/img/card-m3.svg" width="1200" height="675" alt="Comparación visual de los modos Protect, Restrict y Shutdown con el estado del LED del puerto."></figure>
+            <h3 class="heading-card">Módulo 3 · Modos de violación y estado err-disabled</h3>
+            <p>Qué hace el switch cuando se rompe la política: <em>Protect</em> descarta en silencio, <em>Restrict</em> descarta y alerta, y <em>Shutdown</em> apaga el puerto. Incluye cómo diagnosticar un puerto en <code>err-disabled</code> y cómo recuperarlo de forma manual o automática.</p>
+            <div class="btn-row"><a class="btn btn--primary" href="modulo-3-violaciones.html">Ver módulo 3</a></div>
+          </article>
+          <article class="content-card">
+            <figure class="figure figure--xl"><img src="assets/img/card-m4.svg" width="1200" height="675" alt="Pila de capas de defensa: Port Security, DHCP Snooping, DAI e IP Source Guard."></figure>
+            <h3 class="heading-card">Módulo 4 · Buenas prácticas complementarias</h3>
+            <p>Defensa en profundidad en Capa 2: puertos no usados en una VLAN <em>blackhole</em>, supresión de DTP contra VLAN hopping, y DHCP Snooping, DAI e IP Source Guard. Cierra con una plantilla de configuración para endurecer un puerto de acceso.</p>
+            <div class="btn-row"><a class="btn btn--primary" href="modulo-4-buenas-practicas.html">Ver módulo 4</a></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fuentes -->
+    <section class="band band--white" aria-labelledby="fuentes">
+      <div class="container">
+        <h2 class="display-sans-md" id="fuentes">Fuentes consultadas</h2>
+        <ul class="sources">
+          <li>
+            <h3 class="heading-md">Huawei</h3>
+            <p>Info-Finder Encyclopedia: <em>What Is Port Security?</em></p>
+            <a href="https://info.support.huawei.com/info-finder/encyclopedia/en/Port+Security.html" rel="noopener">info.support.huawei.com</a>
+          </li>
+          <li>
+            <h3 class="heading-md">Cisco</h3>
+            <p>Supervisor Engine 6T Software Configuration Guide, Release 15.4SY (Catalyst 6500), capítulo 85: <em>Port Security</em>.</p>
+            <a href="https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst6500/ios/15-4SY/config_guide/sup6T/15_3_sy_swcg_6T/port_security.pdf" rel="noopener">cisco.com</a>
+          </li>
+          <li>
+            <h3 class="heading-md">GeeksforGeeks</h3>
+            <p><em>Port Security in Computer Network</em> y <em>Configuring Port Security on Cisco IOS Switch</em>.</p>
+            <a href="https://www.geeksforgeeks.org/computer-networks/port-security-in-computer-network/" rel="noopener">geeksforgeeks.org</a>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Exposición dirigida por <strong>Tyreans Dev</strong> · Conmutación y Enrutamiento en Redes de Datos (SCD-1004) · Unidad 2: Conmutación LAN</p>
+      <nav aria-label="Fuentes">
+        <a href="https://info.support.huawei.com/info-finder/encyclopedia/en/Port+Security.html" rel="noopener">Huawei</a>
+        <a href="https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst6500/ios/15-4SY/config_guide/sup6T/15_3_sy_swcg_6T/port_security.pdf" rel="noopener">Cisco Sup 6T 15.4SY · Cap. 85</a>
+        <a href="https://www.geeksforgeeks.org/computer-networks/port-security-in-computer-network/" rel="noopener">GeeksforGeeks</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

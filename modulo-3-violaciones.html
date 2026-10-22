@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- TODO(security): frame-ancestors, X-Frame-Options y X-Content-Type-Options no se pueden declarar en <meta>; configúralos como cabeceras HTTP si el sitio se publica en un hosting. -->
+  <!-- TODO(security): Google Fonts no admite SRI (la hoja cambia según el navegador). Se acepta porque solo entrega CSS y fuentes, nunca scripts. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; manifest-src 'self'; worker-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="description" content="Módulo 3: modos de violación de seguridad (Protect, Restrict y Shutdown), diagnóstico del estado err-disabled y procedimientos de recuperación.">
+  <meta name="theme-color" content="#211e1c">
+  <title>Módulo 3 · Modos de violación y estado err-disabled · Port Security</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="assets/js/sw-register.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <header class="masthead">
+    <div class="container">
+      <a class="wordmark" href="index.html">Port Security</a>
+      <span class="masthead__meta">Tyreans Dev · Seguridad en Capa 2</span>
+    </div>
+  </header>
+
+  <nav class="subnav" aria-label="Módulos">
+    <div class="container">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="modulo-1-fundamentos.html">1 · Fundamentos</a></li>
+        <li><a href="modulo-2-aprendizaje.html">2 · Aprendizaje MAC</a></li>
+        <li><a href="modulo-3-violaciones.html" aria-current="page">3 · Violaciones</a></li>
+        <li><a href="modulo-4-buenas-practicas.html">4 · Buenas prácticas</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="contenido">
+    <section class="hero">
+      <div class="container hero__grid">
+        <div>
+          <p class="hero__kicker">Módulo 3</p>
+          <h1 class="display-serif-xl">Modos de violación y tratamiento del estado <code>err-disabled</code></h1>
+          <hr class="eyebrow-rule">
+          <p class="lead">La toma de decisiones algorítmica que ejecuta el conmutador cuando se rompe la política de seguridad: descartar en silencio, alertar al NOC o apagar el puerto por completo.</p>
+        </div>
+        <figure class="figure">
+          <img src="assets/img/m3-flujo-violacion.svg" width="1200" height="675" alt="Diagrama de flujo de decisión del switch al recibir una trama entrante frente a la tabla de direcciones MAC seguras y los tres modos de violación.">
+        </figure>
+      </div>
+    </section>
+
+    <!-- 1. Introducción y preguntas guía -->
+    <section class="band band--white">
+      <div class="container">
+        <div class="split">
+          <div class="prose">
+            <h2 class="display-serif-md">1. Relevancia operativa y preguntas clave</h2>
+            <p>Mientras los módulos previos explican cómo mitigar ataques como <em>MAC Flooding</em> y cómo memorizar hosts legítimos, este módulo responde a lo que sucede en el instante en que un intruso intenta transmitir:</p>
+            <ul>
+              <li>¿Qué ocurre físicamente con el puerto?</li>
+              <li>¿Se descartan únicamente las tramas infractoras o se penaliza a todo el enlace?</li>
+              <li>¿El administrador recibe alertas en tiempo real o el incidente ocurre en silencio?</li>
+              <li>¿Cómo se restablece el servicio sin comprometer la seguridad?</li>
+            </ul>
+          </div>
+          <div class="card card--warm">
+            <h3 class="heading-md">2. ¿Cuándo ocurre una violación?</h3>
+            <p>Una interfaz entra en violación de seguridad bajo dos eventos determinantes:</p>
+            <ol>
+              <li><strong>Exceso del límite (<em>Maximum Limit Exceeded</em>):</strong> la tabla segura del puerto ya alcanzó <code>maximum &lt;n&gt;</code> y entra una trama cuya SMAC no coincide con ninguna autorizada.</li>
+              <li><strong>Movimiento de MAC (<em>MAC Move Violation</em>):</strong> una dirección asegurada en un puerto intenta transmitir por otro puerto distinto dentro de la misma VLAN.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Los tres modos de violación -->
+    <section class="band band--soft">
+      <div class="container">
+        <div class="section-intro">
+          <h2 class="display-serif-md">3. Análisis técnico de los tres modos de violación</h2>
+          <p>Cisco IOS implementa tres modos canónicos de penalización: <strong>Protect</strong>, <strong>Restrict</strong> y <strong>Shutdown</strong>.</p>
+        </div>
+
+        <figure class="figure" style="margin-bottom: var(--s-xxxl);">
+          <img src="assets/img/m3-modos-violacion.svg" width="1200" height="675" alt="Comparativa visual de los modos Protect, Restrict y Shutdown mostrando el estado del puerto, tráfico legítimo, contador, Syslog y SNMP.">
+          <figcaption>Comportamiento operativo y telemetría en los tres modos de violación.</figcaption>
+        </figure>
+
+        <div class="grid grid--3">
+          <article class="card card--line">
+            <span class="card__tag">Silencioso · Bajo impacto</span>
+            <h3 class="heading-lg">3.1 Modo Protect</h3>
+            <pre class="cli"><code>switchport port-security
+ violation protect</code></pre>
+            <ul>
+              <li><strong>Operación:</strong> el ASIC descarta (<em>drops</em>) silenciosamente las tramas de MACs no autorizadas.</li>
+              <li><strong>Estado del puerto:</strong> permanece activo (<code>Up / Up</code>). Los hosts legítimos siguen trabajando sin corte.</li>
+              <li><strong>Telemetría:</strong> no incrementa el contador, no genera Syslog y no envía trampas SNMP.</li>
+              <li><strong>Riesgo:</strong> visibilidad nula; crea un agujero negro sin alertar al NOC del intento de intrusión.</li>
+            </ul>
+          </article>
+
+          <article class="card card--line">
+            <span class="card__tag">Equilibrio · Auditable</span>
+            <h3 class="heading-lg">3.2 Modo Restrict</h3>
+            <pre class="cli"><code>switchport port-security
+ violation restrict</code></pre>
+            <ul>
+              <li><strong>Operación:</strong> descarta las tramas infractoras y mantiene intacto el tráfico de las MAC autorizadas.</li>
+              <li><strong>Estado del puerto:</strong> permanece activo (<code>Up / Up</code>).</li>
+              <li><strong>Telemetría activa:</strong> incrementa el contador de violaciones, registra alerta en Syslog y dispara trampa SNMP con la MAC transgresora.</li>
+              <li><strong>Uso ideal:</strong> oficinas con teléfono IP + PC donde se requiere continuidad de servicio y auditoría en el SOC.</li>
+            </ul>
+          </article>
+
+          <article class="card card--dark">
+            <span class="card__tag">Predeterminado de fábrica · Máxima contención</span>
+            <h3 class="heading-lg">3.3 Modo Shutdown</h3>
+            <pre class="cli"><code>switchport port-security
+ violation shutdown</code></pre>
+            <ul>
+              <li><strong>Operación:</strong> ante la primera trama no autorizada, corta el reenvío y apaga lógicamente el puerto.</li>
+              <li><strong>Estado del puerto:</strong> pasa a <code>err-disabled</code> (<code>Down / Down</code>). El LED físico se apaga o pasa a ámbar.</li>
+              <li><strong>Telemetría:</strong> incrementa contador, emite alerta crítica en consola/Syslog y envía SNMP Trap.</li>
+              <li><strong>Impacto:</strong> neutraliza al 100 % el puerto, pero interrumpe también a los usuarios legítimos hasta que se recupere la interfaz.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Matriz comparativa -->
+    <section class="band band--white">
+      <div class="container">
+        <h2 class="display-serif-md">4. Matriz comparativa integral de modos de violación</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Parámetro / Característica</th>
+                <th scope="col">Modo Protect</th>
+                <th scope="col">Modo Restrict</th>
+                <th scope="col">Modo Shutdown (Default)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Descarta tramas no autorizadas</th><td class="yes">Sí</td><td class="yes">Sí</td><td class="yes">Sí</td></tr>
+              <tr><th scope="row">Permite tráfico de MACs autorizadas</th><td class="yes">Sí</td><td class="yes">Sí</td><td class="no">No (puerto inactivo)</td></tr>
+              <tr><th scope="row">Incrementa contador de violación</th><td class="no">No</td><td class="yes">Sí</td><td class="yes">Sí</td></tr>
+              <tr><th scope="row">Genera mensaje Syslog</th><td class="no">No</td><td class="yes">Sí</td><td class="yes">Sí</td></tr>
+              <tr><th scope="row">Envía notificación SNMP Trap</th><td class="no">No</td><td class="yes">Sí</td><td class="yes">Sí</td></tr>
+              <tr><th scope="row">Estado operativo de la interfaz</th><td>Up / Up</td><td>Up / Up</td><td class="no">Down / Down (<code>err-disabled</code>)</td></tr>
+              <tr><th scope="row">Estado físico del LED frontal</th><td>Verde (enlace activo)</td><td>Verde (enlace activo)</td><td>Ámbar / Apagado</td></tr>
+              <tr><th scope="row">Nivel de visibilidad forense</th><td>Nulo (silencioso)</td><td>Alto (auditable)</td><td>Crítico / Inmediato</td></tr>
+              <tr><th scope="row">Riesgo de DoS en el puerto</th><td>Nulo para el puerto</td><td>Nulo para el puerto</td><td class="no">Alto para hosts válidos en ese puerto</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Anatomía de err-disabled -->
+    <section class="band band--tint">
+      <div class="container">
+        <div class="split">
+          <div class="prose">
+            <h2 class="display-serif-md">5. Anatomía y diagnóstico del estado <code>err-disabled</code></h2>
+            <p>El estado <code>err-disabled</code> (<em>Error-Disabled</em>) es una protección del <em>Port Manager</em> del switch. Cuando se dispara por Port Security, la consola imprime de inmediato:</p>
+            <pre class="cli"><code>%PM-4-ERR_DISABLE: psecure-violation error detected on Gi0/1, putting Gi0/1 in err-disable state
+%PORT_SECURITY-2-PSECURE_VIOLATION: Security violation occurred, caused by MAC address 0050.7966.6801 on port GigabitEthernet0/1.
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/1, changed state to down
+%LINK-3-UPDOWN: Interface GigabitEthernet0/1, changed state to down</code></pre>
+
+            <h3 class="heading-md">Comandos de verificación y auditoría</h3>
+            <pre class="cli"><code><span class="p">Switch#</span> show interfaces status err-disabled
+Port      Name               Status       Reason               Err-disabled Vlans
+Gi0/1     Conexion_PC_A      err-disabled psecure-violation</code></pre>
+
+            <pre class="cli"><code><span class="p">Switch#</span> show port-security interface gigabitEthernet 0/1
+Port Security              : Enabled
+Port Status                : Secure-shutdown
+Violation Mode             : Shutdown
+Maximum MAC Addresses      : 1
+Total MAC Addresses        : 1
+Sticky MAC Addresses       : 1
+Last Source Address:Vlan   : 0050.7966.6801:1
+Security Violation Count   : 1</code></pre>
+          </div>
+          <figure class="figure">
+            <img src="assets/img/m3-led-err-disabled.svg" width="1200" height="675" alt="Panel frontal del switch con el LED del puerto Gi0/1 en color ámbar (err-disabled) y salida de consola indicando psecure-violation.">
+            <figcaption>Indicador físico (LED ámbar) y registro forense de la MAC intrusa (<code>0050.7966.6801</code>).</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Procedimientos de recuperación -->
+    <section class="band band--soft">
+      <div class="container">
+        <div class="section-intro">
+          <h2 class="display-serif-md">6. Procedimientos de recuperación del puerto</h2>
+          <p>Una vez retirado el dispositivo intruso o actualizada la lista de direcciones autorizadas, existen dos estrategias para restablecer el enlace:</p>
+        </div>
+
+        <figure class="figure" style="margin-bottom: var(--s-xxxl);">
+          <img src="assets/img/m3-recuperacion-manual-vs-auto.svg" width="1200" height="675" alt="Dos caminos para restaurar un puerto en err-disabled: recuperación manual con shutdown y no shutdown, y recuperación automática temporizada con errdisable recovery.">
+          <figcaption>Comparación entre la recuperación manual administrativa y la recuperación automática por temporizador.</figcaption>
+        </figure>
+
+        <div class="grid grid--2">
+          <div class="card card--line">
+            <span class="card__tag">Alta seguridad · Bancos y SOC</span>
+            <h3 class="heading-lg">6.1 Recuperación manual</h3>
+            <p>Obliga al ingeniero a validar físicamente la anomalía antes de devolver conectividad:</p>
+            <pre class="cli"><code><span class="p">Switch#</span> configure terminal
+<span class="p">Switch(config)#</span> interface gigabitEthernet 0/1
+<span class="p">Switch(config-if)#</span> shutdown
+<span class="p">Switch(config-if)#</span> no shutdown
+<span class="p">Switch(config-if)#</span> end</code></pre>
+            <p><strong>¿Por qué es indispensable <code>shutdown</code> antes de <code>no shutdown</code>?</strong> Porque la bandera de fallo del <em>Port Manager</em> solo se limpia llevando primero la máquina de estados del puerto a <em>Administratively Down</em>.</p>
+          </div>
+
+          <div class="card card--line">
+            <span class="card__tag">Grandes campus · Automatizada</span>
+            <h3 class="heading-lg">6.2 Recuperación automática (<em>Errdisable Recovery</em>)</h3>
+            <p>Reactiva el puerto tras un temporizador configurable (30 a 86,400 s; 300 s por defecto):</p>
+            <pre class="cli"><code><span class="p">Switch(config)#</span> errdisable recovery cause psecure-violation
+<span class="p">Switch(config)#</span> errdisable recovery interval 300</code></pre>
+            <pre class="cli"><code><span class="p">Switch#</span> show errdisable recovery
+ErrDisable Reason            Timer Status
+-----------------            ------------
+psecure-violation            Enabled
+Timer interval: 300 seconds</code></pre>
+            <p class="caption"><strong>Riesgo de <em>port flapping</em>:</strong> si el equipo atacante sigue conectado, cada 300 s el puerto encenderá y volverá a caer en <code>err-disabled</code>. Úsese solo con correlación de alertas en Syslog/SIEM.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Casos de estudio -->
+    <section class="band band--forest">
+      <div class="container container--narrow">
+        <h2 class="display-serif-md">7. Casos de estudio para discusión en clase</h2>
+        <details class="qa">
+          <summary>Caso 1 · El hub no autorizado en la oficina</summary>
+          <p class="qa__q">«Un empleado conecta un switch de 5 puertos en su toma de pared con su PC autorizada y una tablet personal. Si el puerto tiene maximum 1 y modo protect, ¿qué experimenta en cada equipo y por qué el NOC no se entera?»</p>
+          <p class="qa__a"><strong>Respuesta pedagógica:</strong> la PC sigue funcionando porque fue la primera MAC aprendida; la tablet sufre descarte silencioso de paquetes. El NOC no recibe alerta porque <em>Protect</em> no genera Syslog ni incrementa contadores.</p>
+        </details>
+        <details class="qa">
+          <summary>Caso 2 · Selección de modo en un cajero automático (ATM)</summary>
+          <p class="qa__q">«En una toma dedicada exclusivamente a un cajero bancario o servidor financiero, ¿cuál de los tres modos debe implementarse obligatoriamente y por qué?»</p>
+          <p class="qa__a"><strong>Respuesta pedagógica:</strong> <strong>Shutdown</strong>. En infraestructura crítica, ante cualquier sospecha de derivación o suplantación física, se exige aislamiento instantáneo del enlace e inspección presencial.</p>
+        </details>
+        <details class="qa">
+          <summary>Caso 3 · ¿Por qué no basta con ejecutar solo <code>no shutdown</code>?</summary>
+          <p class="qa__q">«Un técnico intenta levantar un puerto en err-disabled escribiendo únicamente no shutdown, pero el puerto sigue caído. ¿Por qué?»</p>
+          <p class="qa__a"><strong>Respuesta pedagógica:</strong> porque para el sistema operativo la interfaz no estaba apagada administrativamente, sino bloqueada por error. Solo el ciclo completo <code>shutdown</code> → <code>no shutdown</code> reinicia el autómata de estados del puerto.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- 8. Conclusión y paginador -->
+    <section class="band band--warm">
+      <div class="container container--narrow">
+        <h2 class="display-serif-md">8. Conclusión</h2>
+        <p class="lead">Los modos de violación permiten graduar la respuesta del switch desde el descarte silencioso (<em>Protect</em>), pasando por la contención con auditoría (<em>Restrict</em>), hasta el bloqueo físico inmediato (<em>Shutdown</em>).</p>
+        <p>En el último módulo se integra Port Security dentro de una arquitectura completa de <strong>defensa en profundidad en Capa 2</strong>.</p>
+        <div class="pager btn-row">
+          <a class="btn btn--secondary" href="modulo-2-aprendizaje.html">← Módulo 2 · Aprendizaje MAC</a>
+          <a class="btn btn--primary" href="modulo-4-buenas-practicas.html">Módulo 4 · Buenas prácticas →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Exposición dirigida por <strong>Tyreans Dev</strong> · Conmutación y Enrutamiento en Redes de Datos (SCD-1004) · Unidad 2: Conmutación LAN</p>
+      <nav aria-label="Fuentes">
+        <a href="https://info.support.huawei.com/info-finder/encyclopedia/en/Port+Security.html" rel="noopener">Huawei</a>
+        <a href="https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst6500/ios/15-4SY/config_guide/sup6T/15_3_sy_swcg_6T/port_security.pdf" rel="noopener">Cisco Sup 6T 15.4SY · Cap. 85</a>
+        <a href="https://www.geeksforgeeks.org/computer-networks/port-security-in-computer-network/" rel="noopener">GeeksforGeeks</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

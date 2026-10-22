@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675">
+  <title>Dispositivos no autorizados (Rogue Devices) conectados a tomas RJ-45 abiertas</title>
+  <defs>
+    <marker id="arr-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#006b8f"/>
+    </marker>
+    <marker id="arr-danger" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d63b25"/>
+    </marker>
+    <marker id="arr-forest" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#33553c"/>
+    </marker>
+    <marker id="arr-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#312d2a"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="675" fill="#fbf9f8"/>
+  <rect x="48" y="36" width="40" height="4" fill="#f0cc71"/>
+  <text x="48" y="72" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="26" font-weight="800" fill="#161513">CONEXIÓN DE DISPOSITIVOS NO AUTORIZADOS (ROGUE DEVICES)</text>
+  <text x="48" y="100" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="500" fill="#47423e">Tomas de red en salas de juntas, aulas o pasillos sin Port Security conceden enlace inmediato</text>
+
+  <!-- Wall Jack / Switch on top -->
+  <rect x="420" y="135" width="360" height="64" rx="8" fill="#312d2a"/>
+  <text x="600" y="173" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="17" font-weight="800" fill="#ffffff">Toma de Pared RJ-45 Sin Port Security</text>
+
+  <line x1="500" y1="199" x2="225" y2="265" stroke="#d63b25" stroke-width="3" marker-end="url(#arr-danger)"/>
+  <line x1="600" y1="199" x2="600" y2="265" stroke="#d63b25" stroke-width="3" marker-end="url(#arr-danger)"/>
+  <line x1="700" y1="199" x2="975" y2="265" stroke="#d63b25" stroke-width="3" marker-end="url(#arr-danger)"/>
+
+  <!-- 1. Rogue Laptop -->
+  <rect x="64" y="275" width="322" height="310" rx="8" fill="#ffffff" stroke="#d63b25" stroke-width="2"/>
+  <rect x="64" y="275" width="322" height="46" rx="8" fill="#d63b25"/>
+  <text x="225" y="304" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="800" fill="#ffffff">1. LAPTOP INTRUSA (ROGUE LAPTOP)</text>
+  <text x="90" y="356" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="700" fill="#161513">Acceso directo a la VLAN local:</text>
+  <text x="90" y="388" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#161513">• Obtiene IP por DHCP en segundos</text>
+  <text x="90" y="416" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#161513">• Escaneo interno con nmap / Metasploit</text>
+  <text x="90" y="444" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#161513">• Movimiento lateral sin cruzar firewall</text>
+  <rect x="90" y="485" width="270" height="72" rx="6" fill="#f1efed"/>
+  <text x="225" y="516" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="13" font-weight="700" fill="#33553c">Con Port Security:</text>
+  <text x="225" y="538" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="13" fill="#161513">MAC desconocida bloqueada al instante</text>
+
+  <!-- 2. Rogue Switch -->
+  <rect x="439" y="275" width="322" height="310" rx="8" fill="#ffffff" stroke="#d63b25" stroke-width="2"/>
+  <rect x="439" y="275" width="322" height="46" rx="8" fill="#312d2a"/>
+  <text x="600" y="304" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="800" fill="#f0cc71">2. MINI-SWITCH CLANDESTINO</text>
+  <text x="465" y="356" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="700" fill="#161513">Instalado para «tener más puertos»:</text>
+  <text x="465" y="388" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#161513">• Multiplicación no autorizada de hosts</text>
+  <text x="465" y="416" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#d63b25" font-weight="700">• Riesgo de bucles de Capa 2 (STP loop)</text>
+  <text x="465" y="444" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#161513">• Tormentas de broadcast en el segmento</text>
+  <rect x="465" y="485" width="270" height="72" rx="6" fill="#f1efed"/>
+  <text x="600" y="516" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="13" font-weight="700" fill="#33553c">Con Port Security (maximum 1):</text>
+  <text x="600" y="538" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="13" fill="#161513">La 2.ª MAC dispara violación</text>
+
+  <!-- 3. Rogue AP -->
+  <rect x="814" y="275" width="322" height="310" rx="8" fill="#ffffff" stroke="#d63b25" stroke-width="2"/>
+  <rect x="814" y="275" width="322" height="46" rx="8" fill="#d63b25"/>
+  <text x="975" y="304" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="800" fill="#ffffff">3. PUNTO DE ACCESO (ROGUE AP)</text>
+  <text x="840" y="356" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="700" fill="#161513">Puerta trasera inalámbrica:</text>
+  <text x="840" y="388" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#d63b25" font-weight="700">• Expone la LAN hacia el estacionamiento</text>
+  <text x="840" y="416" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#161513">• Reparte IPs corporativas por Wi-Fi</text>
+  <text x="840" y="444" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#161513">• Evade autenticación 802.1X corporativa</text>
+  <rect x="840" y="485" width="270" height="72" rx="6" fill="#f1efed"/>
+  <text x="975" y="516" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="13" font-weight="700" fill="#33553c">Con Port Security:</text>
+  <text x="975" y="538" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="13" fill="#161513">Múltiples MACs en el puerto → bloqueo</text>
+
+  <text x="1152" y="652" text-anchor="end" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#aea8a2">m1-rogue-devices.svg</text>
+</svg>

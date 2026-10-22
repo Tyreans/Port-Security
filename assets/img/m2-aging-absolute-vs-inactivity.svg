@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675">
+  <title>Comparativa de temporizadores de envejecimiento: Absolute vs Inactivity</title>
+  <defs>
+    <marker id="arr-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#006b8f"/>
+    </marker>
+    <marker id="arr-danger" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d63b25"/>
+    </marker>
+    <marker id="arr-forest" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#33553c"/>
+    </marker>
+    <marker id="arr-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#312d2a"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="675" fill="#fbf9f8"/>
+  <rect x="48" y="36" width="40" height="4" fill="#f0cc71"/>
+  <text x="48" y="72" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="26" font-weight="800" fill="#161513">TEMPORIZADORES DE ENVEJECIMIENTO (AGING): ABSOLUTE VS. INACTIVITY</text>
+  <text x="48" y="100" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="500" fill="#47423e">Aplicable exclusivamente a direcciones dinámicas (SecureDynamic); Static y Sticky no envejecen</text>
+
+  <!-- Track 1: Absolute -->
+  <rect x="64" y="150" width="1072" height="200" rx="8" fill="#ffffff" stroke="#312d2a" stroke-width="2"/>
+  <text x="96" y="190" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="800" fill="#161513">1. Modo Absoluto (aging type absolute · Por defecto)</text>
+  <text x="96" y="218" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#47423e">Cuenta regresiva fija desde el aprendizaje. Al llegar al límite, purga la MAC aunque el host siga transmitiendo.</text>
+
+  <line x1="100" y1="285" x2="1060" y2="285" stroke="#312d2a" stroke-width="4" marker-end="url(#arr-ink)"/>
+  <circle cx="140" cy="285" r="10" fill="#33553c"/>
+  <text x="140" y="322" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" fill="#161513">t = 0 min (Aprende MAC)</text>
+
+  <circle cx="380" cy="285" r="7" fill="#006b8f"/>
+  <text x="380" y="262" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="13" fill="#006b8f">Tráfico activo (no reinicia)</text>
+  <circle cx="620" cy="285" r="7" fill="#006b8f"/>
+  <text x="620" y="262" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="13" fill="#006b8f">Tráfico activo (no reinicia)</text>
+
+  <circle cx="920" cy="285" r="12" fill="#d63b25"/>
+  <text x="920" y="258" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" font-weight="800" fill="#d63b25">EXPIRA Y SE PURGA</text>
+  <text x="920" y="322" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" fill="#d63b25">t = 60 min (Reloj estricto)</text>
+
+  <!-- Track 2: Inactivity -->
+  <rect x="64" y="385" width="1072" height="220" rx="8" fill="#ffffff" stroke="#006b8f" stroke-width="2"/>
+  <text x="96" y="425" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="800" fill="#161513">2. Modo Inactividad (aging type inactivity · Idle Timer)</text>
+  <text x="96" y="453" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#47423e">Cada trama legítima reinicia el temporizador a cero. Solo purga la MAC tras silencio continuo.</text>
+
+  <line x1="100" y1="530" x2="1060" y2="530" stroke="#006b8f" stroke-width="4" marker-end="url(#arr-teal)"/>
+  <circle cx="140" cy="530" r="10" fill="#33553c"/>
+  <text x="140" y="568" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" fill="#161513">t = 0 (Aprende)</text>
+
+  <circle cx="350" cy="530" r="9" fill="#33553c"/>
+  <text x="350" y="502" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="13" font-weight="700" fill="#33553c">Trama → Reinicia timer</text>
+
+  <circle cx="560" cy="530" r="9" fill="#33553c"/>
+  <text x="560" y="502" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="13" font-weight="700" fill="#33553c">Host se apaga (silencio)</text>
+
+  <line x1="560" y1="548" x2="920" y2="548" stroke="#d63b25" stroke-width="2"/>
+  <text x="740" y="572" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" fill="#d63b25">30 min sin enviar ni una trama</text>
+
+  <circle cx="920" cy="530" r="12" fill="#d63b25"/>
+  <text x="920" y="502" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" font-weight="800" fill="#d63b25">SE PURGA POR INACTIVIDAD</text>
+
+  <text x="1152" y="652" text-anchor="end" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#aea8a2">m2-aging-absolute-vs-inactivity.svg</text>
+</svg>

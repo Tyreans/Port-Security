@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675">
+  <title>Ataque de VLAN Hopping mediante DTP (Switch Spoofing) y su mitigación</title>
+  <defs>
+    <marker id="arr-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#006b8f"/>
+    </marker>
+    <marker id="arr-danger" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d63b25"/>
+    </marker>
+    <marker id="arr-forest" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#33553c"/>
+    </marker>
+    <marker id="arr-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#312d2a"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="675" fill="#fbf9f8"/>
+  <rect x="48" y="36" width="40" height="4" fill="#f0cc71"/>
+  <text x="48" y="72" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="26" font-weight="800" fill="#161513">ATAQUE DE VLAN HOPPING (DTP) Y MITIGACIÓN CON NONEGOTIATE</text>
+  <text x="48" y="100" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="500" fill="#47423e">Arriba: puerto en Dynamic Auto acepta un troncal falso. Abajo: puerto endurecido en modo acceso fijo.</text>
+
+  <!-- Vulnerable Top Half -->
+  <rect x="64" y="145" width="1072" height="215" rx="8" fill="#ffffff" stroke="#d63b25" stroke-width="2"/>
+  <rect x="64" y="145" width="1072" height="40" rx="6" fill="#d63b25"/>
+  <text x="600" y="171" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="800" fill="#ffffff">ESCENARIO VULNERABLE · PUERTO EN MODO DYNAMIC AUTO / DESIRABLE (DTP ACTIVO)</text>
+
+  <rect x="96" y="210" width="260" height="120" rx="6" fill="#161513"/>
+  <text x="226" y="244" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="800" fill="#d63b25">Atacante (Yersinia / Scapy)</text>
+  <text x="226" y="274" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" fill="#f0cc71">Inyecta tramas DTP</text>
+  <text x="226" y="302" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="13" fill="#ffffff">Simula ser otro Switch Cisco</text>
+
+  <line x1="356" y1="270" x2="540" y2="270" stroke="#d63b25" stroke-width="4" marker-end="url(#arr-danger)"/>
+  <text x="448" y="252" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" font-weight="600" fill="#d63b25">Negocia Trunk 802.1Q</text>
+
+  <rect x="550" y="210" width="550" height="120" rx="6" fill="#f5f4f2" stroke="#d63b25"/>
+  <text x="825" y="246" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="800" fill="#d63b25">El Switch convierte el puerto en Enlace Troncal</text>
+  <text x="825" y="278" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#161513">El atacante etiqueta tráfico y accede a VLAN 10, VLAN 20, VLAN 30...</text>
+  <text x="825" y="306" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" font-weight="700" fill="#d63b25">Evade por completo la segmentación lógica de la red (VLAN Hopping)</text>
+
+  <!-- Hardened Bottom Half -->
+  <rect x="64" y="390" width="1072" height="225" rx="8" fill="#ffffff" stroke="#33553c" stroke-width="2"/>
+  <rect x="64" y="390" width="1072" height="40" rx="6" fill="#33553c"/>
+  <text x="600" y="416" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="800" fill="#ffffff">ESCENARIO ENDURECIDO · MODO ACCESO ESTÁTICO + SUPRESIÓN DE DTP</text>
+
+  <rect x="96" y="455" width="440" height="130" rx="6" fill="#f5f4f2" stroke="#e4e1dd"/>
+  <text x="120" y="490" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" fill="#006b8f">Switch(config)# interface gigabitEthernet 0/1</text>
+  <text x="120" y="518" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" font-weight="600" fill="#33553c">Switch(config-if)# switchport mode access</text>
+  <text x="120" y="546" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" font-weight="600" fill="#33553c">Switch(config-if)# switchport nonegotiate</text>
+  <text x="120" y="572" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" fill="#161513">Switch(config-if)# switchport access vlan 10</text>
+
+  <rect x="570" y="455" width="530" height="130" rx="6" fill="#d6e5e5"/>
+  <text x="835" y="492" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="17" font-weight="800" fill="#33553c">✓ Peticiones DTP ignoradas y bloqueadas</text>
+  <text x="835" y="524" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#161513">El puerto no emite ni procesa tramas de negociación troncal.</text>
+  <text x="835" y="554" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="700" fill="#161513">El host queda confinado estrictamente a su VLAN de acceso.</text>
+
+  <text x="1152" y="652" text-anchor="end" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#aea8a2">m4-vlan-hopping-dtp.svg</text>
+</svg>

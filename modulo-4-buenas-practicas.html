@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- TODO(security): frame-ancestors, X-Frame-Options y X-Content-Type-Options no se pueden declarar en <meta>; configúralos como cabeceras HTTP si el sitio se publica en un hosting. -->
+  <!-- TODO(security): Google Fonts no admite SRI (la hoja cambia según el navegador). Se acepta porque solo entrega CSS y fuentes, nunca scripts. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; manifest-src 'self'; worker-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="description" content="Módulo 4: buenas prácticas complementarias de seguridad en conmutación. VLAN Blackhole, supresión de DTP, DHCP Snooping, DAI, IPSG y plantilla maestra de hardening.">
+  <meta name="theme-color" content="#211e1c">
+  <title>Módulo 4 · Buenas prácticas complementarias · Port Security</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="assets/js/sw-register.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <header class="masthead">
+    <div class="container">
+      <a class="wordmark" href="index.html">Port Security</a>
+      <span class="masthead__meta">Tyreans Dev · Seguridad en Capa 2</span>
+    </div>
+  </header>
+
+  <nav class="subnav" aria-label="Módulos">
+    <div class="container">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="modulo-1-fundamentos.html">1 · Fundamentos</a></li>
+        <li><a href="modulo-2-aprendizaje.html">2 · Aprendizaje MAC</a></li>
+        <li><a href="modulo-3-violaciones.html">3 · Violaciones</a></li>
+        <li><a href="modulo-4-buenas-practicas.html" aria-current="page">4 · Buenas prácticas</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="contenido">
+    <section class="hero">
+      <div class="container hero__grid">
+        <div>
+          <p class="hero__kicker">Módulo 4 · Criterio TecNM (SCD-1004)</p>
+          <h1 class="display-serif-xl">Buenas prácticas complementarias de seguridad en conmutación</h1>
+          <hr class="eyebrow-rule">
+          <p class="lead">Port Security controla quién se conecta físicamente, pero no inspecciona tramas DTP, ofertas DHCP ni paquetes ARP. Así se construye una defensa en profundidad real en Capa 2.</p>
+        </div>
+        <figure class="figure">
+          <img src="assets/img/m4-arquitectura-capa2.svg" width="1200" height="675" alt="Arquitectura de defensa en Capa 2: Port Security, DHCP Snooping, Dynamic ARP Inspection e IP Source Guard.">
+        </figure>
+      </div>
+    </section>
+
+    <!-- 1. Filosofía de Defensa en Profundidad -->
+    <section class="band band--white">
+      <div class="container">
+        <div class="split">
+          <div class="prose">
+            <h2 class="display-serif-md">1. Defensa en profundidad en la Capa de Enlace</h2>
+            <p>Un error frecuente consiste en asumir que activar <em>Port Security</em> resuelve todos los riesgos de la red local. En arquitectura empresarial, la seguridad nunca depende de un único control.</p>
+            <p>Aunque Port Security limita la identidad física (MAC) y el número de terminales por puerto, coexiste con vectores independientes como la negociación maliciosa de enlaces troncales (<em>VLAN Hopping</em>), servidores DHCP falsos (<em>DHCP Spoofing</em>) o el envenenamiento de tablas ARP (<em>ARP Poisoning</em>).</p>
+          </div>
+          <div class="card card--warm">
+            <h3 class="heading-sm">Directivas de Switch Hardening</h3>
+            <ul>
+              <li>Apagar y aislar en una <strong>VLAN Blackhole</strong> todos los puertos sin uso.</li>
+              <li>Forzar modo acceso y desactivar <strong>DTP</strong> (<code>switchport nonegotiate</code>).</li>
+              <li>Filtrar servidores DHCP con <strong>DHCP Snooping</strong>.</li>
+              <li>Validar respuestas ARP con <strong>Dynamic ARP Inspection (DAI)</strong>.</li>
+              <li>Bloquear suplantaciones IP con <strong>IP Source Guard (IPSG)</strong>.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Interfaces no utilizadas y VLAN Blackhole -->
+    <section class="band band--soft">
+      <div class="container">
+        <div class="split">
+          <div class="prose">
+            <h2 class="display-serif-md">2. Aislamiento de interfaces no utilizadas (<em>Blackhole VLAN</em>)</h2>
+            <p>Por defecto, todos los puertos de un switch vienen encendidos (<code>no shutdown</code>) y asignados a la <strong>VLAN 1</strong>, por donde circula tráfico de control (CDP, VTP, PAgP, STP). Cualquier toma RJ-45 vacía en una sala de juntas o pasillo da acceso inmediato a la red si no se endurece.</p>
+            <h3 class="heading-md">Mitigación en dos pasos</h3>
+            <ol>
+              <li><strong>Apagado administrativo (<code>shutdown</code>):</strong> coloca el puerto en <em>Administratively Down</em> sin señal eléctrica.</li>
+              <li><strong>Asignación a una VLAN de aislamiento (ej. VLAN 999):</strong> sin interfaz SVI (sin IP ni gateway) y sin enrutamiento. Si alguien reactiva el puerto por error, queda en un pozo sin salida.</li>
+            </ol>
+            <pre class="cli"><code><span class="p">Switch(config)#</span> vlan 999
+<span class="p">Switch(config-vlan)#</span> name VLAN_Blackhole_Aislamiento
+<span class="p">Switch(config-vlan)#</span> exit
+<span class="p">Switch(config)#</span> interface range fastEthernet 0/11 - 24
+<span class="p">Switch(config-if-range)#</span> switchport mode access
+<span class="p">Switch(config-if-range)#</span> switchport access vlan 999
+<span class="p">Switch(config-if-range)#</span> shutdown
+<span class="p">Switch(config-if-range)#</span> description PUERTO_NO_UTILIZADO_AISLADO</code></pre>
+          </div>
+          <figure class="figure">
+            <img src="assets/img/m4-vlan-blackhole.svg" width="1200" height="675" alt="Mitigación en dos pasos para puertos no asignados: paso 1 bloqueo físico con shutdown y paso 2 contención lógica en la VLAN 999 Blackhole sin SVI ni gateway.">
+            <figcaption>Doble contención física y lógica para puertos desocupados.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. DTP y VLAN Hopping -->
+    <section class="band band--tint">
+      <div class="container">
+        <div class="split">
+          <figure class="figure">
+            <img src="assets/img/m4-vlan-hopping-dtp.svg" width="1200" height="675" alt="Atacante con Yersinia enviando tramas DTP para negociar un enlace troncal 802.1Q y acceder a todas las VLANs, frente a un puerto endurecido con mode access y nonegotiate.">
+            <figcaption>Suplantación de switch mediante DTP frente a puerto con negociación desactivada.</figcaption>
+          </figure>
+          <div class="prose">
+            <h2 class="display-serif-md">3. Supresión de DTP contra <em>VLAN Hopping</em></h2>
+            <p>Las interfaces Cisco operan por defecto en negociación dinámica de troncales (<em>Dynamic Auto</em> o <em>Dynamic Desirable</em>) mediante el protocolo propietario <strong>DTP</strong> (<em>Dynamic Trunking Protocol</em>).</p>
+            <p><strong>El ataque (<em>Switch Spoofing</em>):</strong> un atacante con herramientas como <em>Yersinia</em> o <em>Scapy</em> inyecta tramas DTP pidiendo formar un enlace troncal 802.1Q. Si el puerto acepta, el intruso obtiene acceso directo al tráfico de todas las VLANs del switch.</p>
+            <h3 class="heading-md">Regla de oro de hardening</h3>
+            <ul>
+              <li><code>switchport mode access</code>: fuerza el puerto a operar exclusivamente como acceso.</li>
+              <li><code>switchport nonegotiate</code>: suprime por completo el envío y recepción de tramas DTP.</li>
+            </ul>
+            <pre class="cli"><code><span class="p">Switch(config)#</span> interface gigabitEthernet 0/1
+<span class="p">Switch(config-if)#</span> switchport mode access
+<span class="p">Switch(config-if)#</span> switchport nonegotiate
+<span class="p">Switch(config-if)#</span> switchport access vlan 10</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Tecnologías complementarias -->
+    <section class="band band--soft">
+      <div class="container">
+        <div class="section-intro">
+          <h2 class="display-serif-md">4. Port Security frente a tecnologías complementarias</h2>
+          <p>Port Security valida únicamente la cabecera Ethernet (MAC de origen). Si un equipo con MAC legítima y autorizada envía ofertas DHCP falsas o respuestas ARP envenenadas, Port Security no lo detecta: se requieren las siguientes capas.</p>
+        </div>
+
+        <div class="grid grid--2" style="margin-bottom: var(--s-xxxl);">
+          <article class="card card--line">
+            <span class="card__tag">Capa 2 pura · Identidad física</span>
+            <h3 class="heading-lg">4.1 Port Security</h3>
+            <p><strong>Qué analiza:</strong> dirección MAC de origen en la trama Ethernet.</p>
+            <p><strong>Qué mitiga:</strong> conexión de dispositivos físicos no autorizados (<em>Rogue Devices</em>) y agotamiento de la tabla CAM (<em>MAC Flooding</em>).</p>
+            <p><strong>Limitación:</strong> es ciego al contenido IP, DHCP o ARP de las tramas que provienen de una MAC ya permitida.</p>
+          </article>
+
+          <article class="card card--line">
+            <span class="card__tag">Pilar base · Binding Database</span>
+            <h3 class="heading-lg">4.2 DHCP Snooping</h3>
+            <p><strong>Qué mitiga:</strong> servidores DHCP clandestinos (<em>Rogue DHCP</em>) y agotamiento de IPs (<em>DHCP Starvation</em>).</p>
+            <p><strong>Cómo opera:</strong> divide los puertos en <strong>Trusted</strong> (hacia el servidor legítimo) y <strong>Untrusted</strong> (usuarios). Descarta cualquier paquete <code>DHCP Offer</code> o <code>DHCP ACK</code> que entre por un puerto no confiable y construye la <strong>Binding Table</strong> (<code>MAC | IP | Lease | VLAN | Puerto</code>).</p>
+          </article>
+
+          <article class="card card--line">
+            <span class="card__tag">Anti-MitM · Validación ARP</span>
+            <h3 class="heading-lg">4.3 Dynamic ARP Inspection (DAI)</h3>
+            <p><strong>Qué mitiga:</strong> envenenamiento de tablas ARP (<em>ARP Spoofing / Poisoning</em>), base de los ataques <em>Man-in-the-Middle</em> en LAN.</p>
+            <p><strong>Cómo opera:</strong> intercepta cada paquete ARP en puertos <em>Untrusted</em> y verifica que el par <code>{IP, MAC}</code> coincida con la <em>Binding Table</em> generada por DHCP Snooping. Si no coincide, descarta el paquete.</p>
+          </article>
+
+          <article class="card card--line">
+            <span class="card__tag">Filtro en hardware · Anti-IP Spoofing</span>
+            <h3 class="heading-lg">4.4 IP Source Guard (IPSG)</h3>
+            <p><strong>Qué mitiga:</strong> suplantación de direcciones IP (<em>IP Spoofing</em>) desde un puerto de usuario.</p>
+            <p><strong>Cómo opera:</strong> utiliza la base de datos de DHCP Snooping para instalar una ACL dinámica en el hardware del puerto: solo deja pasar paquetes IP cuyo origen coincida exactamente con la IP asignada a esa MAC.</p>
+          </article>
+        </div>
+
+        <div class="grid grid--2">
+          <figure class="figure">
+            <img src="assets/img/m4-dhcp-snooping-trusted.svg" width="1200" height="675" alt="Switch con DHCP Snooping: el puerto Trusted permite DHCP Offer del servidor legítimo, mientras el puerto Untrusted bloquea un servidor DHCP falso y registra la Binding Table.">
+            <figcaption>DHCP Snooping: clasificación Trusted/Untrusted y creación de la Binding Table.</figcaption>
+          </figure>
+          <figure class="figure">
+            <img src="assets/img/m4-dai-arp.svg" width="1200" height="675" alt="Dynamic ARP Inspection: el switch compara un paquete ARP falso contra la tabla de DHCP Snooping y lo descarta antes de que envenene a los hosts.">
+            <figcaption>Dynamic ARP Inspection (DAI) descartando respuestas ARP falsificadas.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Matriz comparativa -->
+    <section class="band band--white">
+      <div class="container">
+        <h2 class="display-serif-md">5. Matriz comparativa de tecnologías de seguridad en Capa 2</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Característica</th>
+                <th scope="col">Port Security</th>
+                <th scope="col">DHCP Snooping</th>
+                <th scope="col">Dynamic ARP Inspection (DAI)</th>
+                <th scope="col">IP Source Guard (IPSG)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Criterio de validación</th><td>Dirección MAC de origen</td><td>Mensajes de protocolo DHCP</td><td>Paquetes y respuestas ARP</td><td>Dirección IP y MAC de origen</td></tr>
+              <tr><th scope="row">Dependencia técnica</th><td>Ninguna (autónomo)</td><td>Ninguna (es el pilar base)</td><td>Requiere DHCP Snooping</td><td>Requiere DHCP Snooping</td></tr>
+              <tr><th scope="row">Ataques que mitiga</th><td>Inundación CAM, Rogue Hosts</td><td>Rogue DHCP, DHCP Starvation</td><td>ARP Poisoning, ataques MitM</td><td>IP/MAC Spoofing en host</td></tr>
+              <tr><th scope="row">Acción ante infracción</th><td>Protect / Restrict / Shutdown</td><td>Descarte de paquete DHCP Offer</td><td>Descarte de tramas ARP falsas</td><td>Descarte de paquetes IP falsos</td></tr>
+              <tr><th scope="row">Clasificación de puertos</th><td>Seguro / Inseguro</td><td>Trusted / Untrusted</td><td>Trusted / Untrusted</td><td>Trusted / Untrusted</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Plantilla maestra de hardening -->
+    <section class="band band--tint" id="plantilla-maestra">
+      <div class="container">
+        <div class="split">
+          <div class="prose">
+            <h2 class="display-serif-md">6. Plantilla maestra de endurecimiento de un puerto de acceso</h2>
+            <p>Configuración integral para una estación de trabajo empresarial con teléfono IP y PC, cumpliendo estándares de la industria y criterios de evaluación académica:</p>
+            <ul>
+              <li><strong>Bloque 1:</strong> fija el modo acceso y apaga DTP contra <em>VLAN Hopping</em>.</li>
+              <li><strong>Bloque 2:</strong> activa Port Security para 2 dispositivos (voz + datos), aprende las MAC en modo <em>sticky</em> y audita infracciones con <em>restrict</em>.</li>
+              <li><strong>Bloque 3:</strong> acelera la convergencia con <code>portfast</code> y protege el árbol STP con <code>bpduguard</code>.</li>
+            </ul>
+          </div>
+          <div>
+            <pre class="cli"><code><span class="p">Switch#</span> configure terminal
+<span class="p">Switch(config)#</span> interface gigabitEthernet 0/5
+<span class="p">Switch(config-if)#</span> description CONEXION_USUARIO_ESTACION_05
+
+<span class="c">! 1. Fijación en modo acceso y supresión de DTP</span>
+<span class="p">Switch(config-if)#</span> switchport mode access
+<span class="p">Switch(config-if)#</span> switchport nonegotiate
+<span class="p">Switch(config-if)#</span> switchport access vlan 10
+
+<span class="c">! 2. Implementación de Port Security</span>
+<span class="p">Switch(config-if)#</span> switchport port-security
+<span class="p">Switch(config-if)#</span> switchport port-security maximum 2
+<span class="p">Switch(config-if)#</span> switchport port-security mac-address sticky
+<span class="p">Switch(config-if)#</span> switchport port-security violation restrict
+
+<span class="c">! 3. Medidas complementarias de optimización y seguridad</span>
+<span class="p">Switch(config-if)#</span> spanning-tree portfast
+<span class="p">Switch(config-if)#</span> spanning-tree bpduguard enable
+<span class="p">Switch(config-if)#</span> exit</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Preguntas de reflexión -->
+    <section class="band band--forest">
+      <div class="container container--narrow">
+        <h2 class="display-serif-md">7. Preguntas de reflexión para el cierre de la exposición</h2>
+        <details class="qa">
+          <summary>¿Por qué combinar <code>shutdown</code> y una VLAN Blackhole en vez de solo apagar el puerto?</summary>
+          <p class="qa__q">«Si un puerto ya está en shutdown, ¿qué aporta moverlo además a una VLAN 999 sin salida?»</p>
+          <p class="qa__a"><strong>Respuesta sugerida:</strong> protege contra errores administrativos o scripts que ejecuten <code>no shutdown</code> por accidente. Si el puerto se reactiva, el intruso queda aislado en una VLAN sin SVI, sin DHCP, sin gateway y fuera de la VLAN 1.</p>
+        </details>
+        <details class="qa">
+          <summary>¿Puede un usuario legítimo hacer <em>ARP Poisoning</em> en un puerto con Port Security activo?</summary>
+          <p class="qa__q">«Un puerto tiene switchport port-security con maximum 1 y modo restrict. ¿Puede esa misma PC ejecutar un ataque de envenenamiento ARP?»</p>
+          <p class="qa__a"><strong>Respuesta sugerida:</strong> sí. Como la trama sale con la dirección MAC legítima ya autorizada en el puerto, Port Security la da por válida. La falsificación va dentro del payload ARP, por lo que se necesita <strong>Dynamic ARP Inspection (DAI)</strong> para bloquearla.</p>
+        </details>
+        <details class="qa">
+          <summary>¿Qué función cumple <code>switchport nonegotiate</code> si ya se configuró <code>switchport mode access</code>?</summary>
+          <p class="qa__q">«Si el puerto ya fue declarado de acceso estático, ¿por qué añadir switchport nonegotiate?»</p>
+          <p class="qa__a"><strong>Respuesta sugerida:</strong> garantiza que la interfaz deje de emitir tramas DTP por completo, evitando divulgar información de negociación y cerrando cualquier vector de consulta o manipulación de trunking.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- Cierre y retorno -->
+    <section class="band band--warm">
+      <div class="container container--narrow">
+        <h2 class="display-serif-md">Cierre del recorrido</h2>
+        <p class="lead">Combinar Port Security con el aislamiento de puertos inactivos, la supresión de DTP y la tríada DHCP Snooping + DAI + IPSG transforma una capa de enlace confiada por defecto en una frontera verificable puerto por puerto.</p>
+        <div class="pager btn-row">
+          <a class="btn btn--secondary" href="modulo-3-violaciones.html">← Módulo 3 · Violaciones</a>
+          <a class="btn btn--primary" href="index.html">Volver al resumen del proyecto →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Exposición dirigida por <strong>Tyreans Dev</strong> · Conmutación y Enrutamiento en Redes de Datos (SCD-1004) · Unidad 2: Conmutación LAN</p>
+      <nav aria-label="Fuentes">
+        <a href="https://info.support.huawei.com/info-finder/encyclopedia/en/Port+Security.html" rel="noopener">Huawei</a>
+        <a href="https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst6500/ios/15-4SY/config_guide/sup6T/15_3_sy_swcg_6T/port_security.pdf" rel="noopener">Cisco Sup 6T 15.4SY · Cap. 85</a>
+        <a href="https://www.geeksforgeeks.org/computer-networks/port-security-in-computer-network/" rel="noopener">GeeksforGeeks</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

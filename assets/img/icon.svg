@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Port Security</title>
+  <rect width="512" height="512" fill="#211e1c"/>
+  <rect x="96" y="196" width="320" height="120" rx="8" fill="#f1efed"/>
+  <rect x="128" y="236" width="40" height="40" rx="4" fill="#312d2a"/>
+  <rect x="188" y="236" width="40" height="40" rx="4" fill="#312d2a"/>
+  <rect x="248" y="236" width="40" height="40" rx="4" fill="#312d2a"/>
+  <rect x="308" y="236" width="76" height="40" rx="4" fill="#c74634"/>
+  <rect x="216" y="380" width="80" height="12" fill="#f0cc71"/>
+</svg>

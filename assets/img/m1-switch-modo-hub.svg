@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675">
+  <title>Degradación del switch a modo Hub (Fail-Open) e intercepción con Wireshark</title>
+  <defs>
+    <marker id="arr-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#006b8f"/>
+    </marker>
+    <marker id="arr-danger" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d63b25"/>
+    </marker>
+    <marker id="arr-forest" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#33553c"/>
+    </marker>
+    <marker id="arr-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#312d2a"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="675" fill="#fbf9f8"/>
+  <rect x="48" y="36" width="40" height="4" fill="#f0cc71"/>
+  <text x="48" y="72" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="26" font-weight="800" fill="#161513">DEGRADACIÓN A MODO HUB (FAIL-OPEN) Y SNIFFING</text>
+  <text x="48" y="100" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="500" fill="#47423e">Con la tabla CAM llena, el switch replica el tráfico unicast hacia todos los puertos de la VLAN</text>
+
+  <!-- Legit Host A -->
+  <rect x="64" y="250" width="230" height="150" rx="8" fill="#ffffff" stroke="#33553c" stroke-width="2"/>
+  <text x="179" y="290" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="17" font-weight="800" fill="#33553c">Host Legítimo A</text>
+  <text x="179" y="320" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#161513">Envía datos confidenciales</text>
+  <text x="179" y="344" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#161513">hacia el Servidor B</text>
+  <text x="179" y="375" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#006b8f">Puerto Gi0/1</text>
+
+  <line x1="294" y1="325" x2="430" y2="325" stroke="#006b8f" stroke-width="3" marker-end="url(#arr-teal)"/>
+
+  <!-- Switch in Fail-Open -->
+  <rect x="440" y="210" width="310" height="230" rx="8" fill="#312d2a"/>
+  <rect x="464" y="232" width="262" height="36" rx="4" fill="#d63b25"/>
+  <text x="595" y="255" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" font-weight="800" fill="#ffffff">TABLA CAM LLENA · FAIL-OPEN</text>
+  <text x="595" y="305" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="18" font-weight="800" fill="#ffffff">Switch actúa como HUB</text>
+  <text x="595" y="338" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#f1efed">No encuentra la MAC de B</text>
+  <text x="595" y="362" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#f0cc71">→ Inunda TODOS los puertos</text>
+  <text x="595" y="405" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#aea8a2">Unknown Unicast Flooding</text>
+
+  <!-- Replicated arrows to all ports -->
+  <line x1="750" y1="265" x2="880" y2="195" stroke="#33553c" stroke-width="3" marker-end="url(#arr-forest)"/>
+  <line x1="750" y1="325" x2="880" y2="325" stroke="#006b8f" stroke-width="3" marker-end="url(#arr-teal)"/>
+  <line x1="750" y1="385" x2="880" y2="465" stroke="#d63b25" stroke-width="4" marker-end="url(#arr-danger)"/>
+
+  <!-- Server B -->
+  <rect x="890" y="135" width="250" height="110" rx="8" fill="#ffffff" stroke="#33553c" stroke-width="2"/>
+  <text x="1015" y="175" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="800" fill="#33553c">Servidor B (Destino real)</text>
+  <text x="1015" y="202" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#161513">Recibe la trama en Gi0/2</text>
+
+  <!-- Other Host -->
+  <rect x="890" y="270" width="250" height="110" rx="8" fill="#ffffff" stroke="#d4cfca" stroke-width="2"/>
+  <text x="1015" y="310" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="800" fill="#47423e">Impresora / Otros Hosts</text>
+  <text x="1015" y="337" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#47423e">Reciben copia innecesaria</text>
+
+  <!-- Attacker sniffing -->
+  <rect x="890" y="410" width="250" height="150" rx="8" fill="#ffffff" stroke="#d63b25" stroke-width="3"/>
+  <rect x="890" y="410" width="250" height="36" rx="6" fill="#d63b25"/>
+  <text x="1015" y="434" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" font-weight="800" fill="#ffffff">ATACANTE · WIRESHARK</text>
+  <text x="1015" y="476" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="700" fill="#161513">NIC en Modo Promiscuo</text>
+  <text x="1015" y="502" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="13" fill="#d63b25">Captura VoIP, correos, HTTP, FTP</text>
+  <text x="1015" y="526" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="13" fill="#47423e">y credenciales en texto claro</text>
+
+  <text x="1152" y="652" text-anchor="end" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#aea8a2">m1-switch-modo-hub.svg</text>
+</svg>

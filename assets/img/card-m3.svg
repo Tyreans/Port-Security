@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675">
+  <title>Módulo 3: Modos de violación Protect, Restrict y Shutdown</title>
+  <defs>
+    <marker id="arr-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#006b8f"/>
+    </marker>
+    <marker id="arr-danger" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d63b25"/>
+    </marker>
+    <marker id="arr-forest" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#33553c"/>
+    </marker>
+    <marker id="arr-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#312d2a"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="675" fill="#fbf9f8"/>
+  <rect x="48" y="36" width="40" height="4" fill="#f0cc71"/>
+  <text x="48" y="72" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="26" font-weight="800" fill="#161513">MÓDULO 3 · MODOS DE VIOLACIÓN Y ERR-DISABLED</text>
+  <text x="48" y="100" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="500" fill="#47423e">Respuesta del switch ante tramas no autorizadas y recuperación del puerto</text>
+
+  <!-- Protect -->
+  <rect x="72" y="160" width="330" height="390" rx="8" fill="#ffffff" stroke="#e4e1dd" stroke-width="2"/>
+  <rect x="72" y="160" width="330" height="54" rx="8" fill="#f1efed"/>
+  <text x="237" y="194" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="800" fill="#161513">PROTECT</text>
+  <circle cx="237" cy="260" r="24" fill="#33553c"/>
+  <text x="237" y="308" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="700" fill="#33553c">Puerto Up / Up (LED verde)</text>
+  <text x="104" y="355" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#161513">• Descarta tramas intrusas</text>
+  <text x="104" y="388" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#161513">• Tráfico legítimo continúa</text>
+  <text x="104" y="421" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#d63b25" font-weight="700">✗ Sin Syslog ni SNMP</text>
+  <text x="104" y="454" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#d63b25" font-weight="700">✗ Contador no sube (0)</text>
+  <rect x="104" y="485" width="266" height="40" rx="4" fill="#f5f4f2"/>
+  <text x="237" y="510" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" font-weight="600" fill="#47423e">Silencioso (sin visibilidad)</text>
+
+  <!-- Restrict -->
+  <rect x="435" y="160" width="330" height="390" rx="8" fill="#ffffff" stroke="#006b8f" stroke-width="2"/>
+  <rect x="435" y="160" width="330" height="54" rx="8" fill="#d6e5e5"/>
+  <text x="600" y="194" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="800" fill="#161513">RESTRICT</text>
+  <circle cx="600" cy="260" r="24" fill="#33553c"/>
+  <text x="600" y="308" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="700" fill="#33553c">Puerto Up / Up (LED verde)</text>
+  <text x="467" y="355" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#161513">• Descarta tramas intrusas</text>
+  <text x="467" y="388" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#161513">• Tráfico legítimo continúa</text>
+  <text x="467" y="421" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#33553c" font-weight="700">✓ Alerta Syslog + SNMP Trap</text>
+  <text x="467" y="454" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#33553c" font-weight="700">✓ Incrementa Violation Count</text>
+  <rect x="467" y="485" width="266" height="40" rx="4" fill="#d6e5e5"/>
+  <text x="600" y="510" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" font-weight="700" fill="#161513">Equilibrio continuidad / NOC</text>
+
+  <!-- Shutdown -->
+  <rect x="798" y="160" width="330" height="390" rx="8" fill="#312d2a" stroke="#312d2a" stroke-width="2"/>
+  <rect x="798" y="160" width="330" height="54" rx="8" fill="#161513"/>
+  <text x="963" y="194" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="800" fill="#f0cc71">SHUTDOWN (DEFAULT)</text>
+  <circle cx="963" cy="260" r="24" fill="#f0cc71"/>
+  <text x="963" y="308" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="700" fill="#f0cc71">err-disabled (LED ámbar)</text>
+  <text x="830" y="355" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#ffffff">• Apaga el puerto de inmediato</text>
+  <text x="830" y="388" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#f0cc71" font-weight="700">✗ Corta todo el enlace físico</text>
+  <text x="830" y="421" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#ffffff">✓ Syslog crítico + SNMP + contador</text>
+  <text x="830" y="454" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#ffffff">• Recuperación manual o auto</text>
+  <rect x="830" y="485" width="266" height="40" rx="4" fill="#47423e"/>
+  <text x="963" y="510" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" fill="#ffffff">shutdown / no shutdown</text>
+
+  <text x="1152" y="652" text-anchor="end" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#aea8a2">card-m3.svg</text>
+</svg>

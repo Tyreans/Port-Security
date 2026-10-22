@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675">
+  <title>Ataque de inundación de tabla CAM con la herramienta macof</title>
+  <defs>
+    <marker id="arr-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#006b8f"/>
+    </marker>
+    <marker id="arr-danger" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d63b25"/>
+    </marker>
+    <marker id="arr-forest" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#33553c"/>
+    </marker>
+    <marker id="arr-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#312d2a"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="675" fill="#fbf9f8"/>
+  <rect x="48" y="36" width="40" height="4" fill="#f0cc71"/>
+  <text x="48" y="72" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="26" font-weight="800" fill="#161513">ATAQUE DE INUNDACIÓN DE TABLA MAC (CAM FLOODING)</text>
+  <text x="48" y="100" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="500" fill="#47423e">macof inyecta hasta 150,000 tramas por segundo con direcciones MAC de origen falsas</text>
+
+  <!-- Attacker -->
+  <rect x="64" y="170" width="310" height="380" rx="8" fill="#ffffff" stroke="#d63b25" stroke-width="2"/>
+  <rect x="64" y="170" width="310" height="48" rx="8" fill="#d63b25"/>
+  <text x="219" y="200" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="17" font-weight="800" fill="#ffffff">ATACANTE (HERRAMIENTA MACOF)</text>
+  <rect x="92" y="242" width="254" height="175" rx="6" fill="#161513"/>
+  <text x="108" y="272" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" fill="#f0cc71"># macof -i eth0</text>
+  <text x="108" y="300" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#ffffff">SMAC: 00:11:22:33:44:55</text>
+  <text x="108" y="324" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#ffffff">SMAC: 00:AB:CD:EF:12:34</text>
+  <text x="108" y="348" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#ffffff">SMAC: 00:99:88:77:66:55</text>
+  <text x="108" y="372" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#ffffff">SMAC: 00:7F:3A:91:C0:08</text>
+  <text x="108" y="398" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#d63b25">... 50k a 150k tramas/seg</text>
+  <text x="219" y="462" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="700" fill="#161513">Conectado a una sola toma RJ-45</text>
+  <text x="219" y="490" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#47423e">Cada trama declara una SMAC distinta</text>
+
+  <!-- Flood arrows -->
+  <line x1="384" y1="270" x2="548" y2="270" stroke="#d63b25" stroke-width="4" marker-end="url(#arr-danger)"/>
+  <line x1="384" y1="330" x2="548" y2="330" stroke="#d63b25" stroke-width="4" marker-end="url(#arr-danger)"/>
+  <line x1="384" y1="390" x2="548" y2="390" stroke="#d63b25" stroke-width="4" marker-end="url(#arr-danger)"/>
+  <text x="466" y="250" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" font-weight="800" fill="#d63b25">Avalancha continua</text>
+
+  <!-- CAM Table overflowing -->
+  <rect x="564" y="170" width="572" height="380" rx="8" fill="#ffffff" stroke="#312d2a" stroke-width="2"/>
+  <rect x="564" y="170" width="572" height="48" rx="8" fill="#312d2a"/>
+  <text x="850" y="200" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="17" font-weight="800" fill="#ffffff">SWITCH SIN PORT SECURITY · TABLA CAM SATURADA</text>
+
+  <!-- Capacity bar 100% -->
+  <text x="596" y="252" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="800" fill="#d63b25">Capacidad CAM: 8,192 / 8,192 entradas (100% AGOTADA en segundos)</text>
+  <rect x="596" y="266" width="508" height="26" rx="4" fill="#d63b25"/>
+
+  <!-- Fake entries inside CAM -->
+  <rect x="596" y="310" width="508" height="145" rx="6" fill="#f5f4f2" stroke="#e4e1dd"/>
+  <text x="616" y="338" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" fill="#d63b25">Gi0/7  00:11:22:33:44:55  (Falsa - macof)</text>
+  <text x="616" y="364" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" fill="#d63b25">Gi0/7  00:AB:CD:EF:12:34  (Falsa - macof)</text>
+  <text x="616" y="390" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" fill="#d63b25">Gi0/7  00:99:88:77:66:55  (Falsa - macof)</text>
+  <text x="616" y="416" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" fill="#d63b25">Gi0/7  ... miles de entradas falsas llenan toda la tabla</text>
+
+  <!-- Expelled legit entries -->
+  <rect x="596" y="472" width="508" height="56" rx="6" fill="#f1efed" stroke="#d63b25"/>
+  <text x="850" y="498" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="800" fill="#d63b25">MACs legítimas expulsadas de la tabla CAM</text>
+  <text x="850" y="518" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="13" fill="#161513">Servidores, PCs e impresoras pasan a ser destinos «desconocidos»</text>
+
+  <text x="1152" y="652" text-anchor="end" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#aea8a2">m1-mac-flooding-macof.svg</text>
+</svg>

@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- TODO(security): frame-ancestors, X-Frame-Options y X-Content-Type-Options no se pueden declarar en <meta>; configúralos como cabeceras HTTP si el sitio se publica en un hosting. -->
+  <!-- TODO(security): Google Fonts no admite SRI (la hoja cambia según el navegador). Se acepta porque solo entrega CSS y fuentes, nunca scripts. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; manifest-src 'self'; worker-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="description" content="Módulo 1: fundamentos y vectores de ataque en Capa 2. Inundación de tabla MAC, dispositivos no autorizados y suplantación de MAC.">
+  <meta name="theme-color" content="#211e1c">
+  <title>Módulo 1 · Fundamentos y vectores de ataque en Capa 2 · Port Security</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="assets/js/sw-register.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <header class="masthead">
+    <div class="container">
+      <a class="wordmark" href="index.html">Port Security</a>
+      <span class="masthead__meta">Tyreans Dev · Seguridad en Capa 2</span>
+    </div>
+  </header>
+
+  <nav class="subnav" aria-label="Módulos">
+    <div class="container">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="modulo-1-fundamentos.html" aria-current="page">1 · Fundamentos</a></li>
+        <li><a href="modulo-2-aprendizaje.html">2 · Aprendizaje MAC</a></li>
+        <li><a href="modulo-3-violaciones.html">3 · Violaciones</a></li>
+        <li><a href="modulo-4-buenas-practicas.html">4 · Buenas prácticas</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="contenido">
+    <section class="hero">
+      <div class="container hero__grid">
+        <div>
+          <p class="hero__kicker">Módulo 1</p>
+          <h1 class="display-serif-xl">Fundamentos y vectores de ataque en Capa 2</h1>
+          <hr class="eyebrow-rule">
+          <p class="lead">Por qué la seguridad física y lógica del switch es indispensable, y qué le ocurre a una red cuando se omite Port Security.</p>
+        </div>
+        <figure class="figure">
+          <img src="assets/img/m1-defensa-profundidad.svg" width="1200" height="675" alt="Capas de defensa: tomas físicas, Capa 2 con Port Security, Capa 3 con ACLs y Capas 4 a 7 con firewall y TLS. Un intruso dentro del edificio evita el firewall perimetral.">
+        </figure>
+      </div>
+    </section>
+
+    <!-- 1. Introducción -->
+    <section class="band band--white">
+      <div class="container">
+        <div class="split">
+          <div class="prose">
+            <h2 class="display-serif-md">1. El problema: la defensa en profundidad empieza abajo</h2>
+            <p>En el diseño tradicional, la seguridad se concentra en el perímetro: firewalls en la frontera con Internet, listas de control de acceso (ACLs) en los routers y cifrado en las capas de Transporte o Aplicación (TLS, SSH, HTTPS).</p>
+            <p>Esa arquitectura olvida un principio básico: la <strong>defensa en profundidad</strong>. Si alguien sin autorización obtiene acceso físico o inalámbrico al interior de las instalaciones, todos los controles de las capas 3 a 7 pueden quedar neutralizados cuando la Capa de Enlace (Capa 2) no tiene mecanismos de contención.</p>
+          </div>
+          <div class="card card--warm">
+            <h3 class="heading-sm">Objetivo del módulo</h3>
+            <p>Demostrar por qué la seguridad física y lógica en el switch es indispensable, explicando cómo funcionan los ataques de Capa de Enlace y los riesgos de omitir <em>Port Security</em>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band band--teal">
+      <div class="container">
+        <blockquote class="quote">
+          «La Capa de Enlace de Datos no fue diseñada originalmente pensando en la hostilidad de los entornos modernos. Asume confianza absoluta.»
+          <cite>Premisa central para la exposición</cite>
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- 2. Vulnerabilidad intrínseca -->
+    <section class="band band--soft">
+      <div class="container">
+        <div class="section-intro">
+          <h2 class="display-serif-md">2. La vulnerabilidad intrínseca de la Capa 2</h2>
+          <p>Para entender el valor de Port Security hay que conocer cómo opera un switch Ethernet (IEEE 802.3), tanto en lo físico como en lo lógico.</p>
+        </div>
+
+        <div class="split">
+          <div class="prose">
+            <h3 class="heading-xl">2.1 Confianza heredada de Ethernet</h3>
+            <p>Ethernet nació sobre un medio compartido (bus coaxial y hubs) regido por CSMA/CD. Al migrar a switches, la microsegmentación eliminó las colisiones, pero <strong>se heredó el paradigma de confianza ciega</strong>:</p>
+            <ul>
+              <li><strong>Sin autenticación de origen:</strong> el encabezado solo trae la MAC de destino (DMAC), la MAC de origen (SMAC) y el EtherType. Nada demuestra que la SMAC pertenece realmente a la tarjeta de red que transmite.</li>
+              <li><strong>Aceptación incondicional:</strong> el switch da por legítimo a cualquier dispositivo que transmita por un puerto de acceso.</li>
+            </ul>
+          </div>
+          <figure class="figure">
+            <img src="assets/img/m1-trama-ethernet.svg" width="1200" height="675" alt="Estructura de una trama Ethernet II: preámbulo, MAC de destino, MAC de origen, EtherType, datos y FCS. La MAC de origen no tiene autenticación.">
+            <figcaption>La trama Ethernet no autentica la MAC de origen.</figcaption>
+          </figure>
+        </div>
+
+        <div class="split">
+          <figure class="figure">
+            <img src="assets/img/m1-tabla-cam-aprendizaje.svg" width="1200" height="675" alt="Proceso de aprendizaje de la tabla CAM: la trama llega por un puerto, el switch lee la MAC de origen, crea una entrada VLAN, MAC, tipo y puerto, y reenvía o inunda según conozca el destino.">
+            <figcaption>Aprendizaje dinámico de la tabla CAM.</figcaption>
+          </figure>
+          <div class="prose">
+            <h3 class="heading-xl">2.2 La memoria CAM y la tabla MAC</h3>
+            <p>El switch conmuta a velocidad de cable gracias a la memoria <strong>CAM</strong> (<em>Content Addressable Memory</em>). Recibe una dirección MAC de 48 bits y devuelve, en un solo ciclo de reloj, el puerto de salida.</p>
+            <ol>
+              <li><strong>Inspección de la SMAC:</strong> la asocia con el puerto de ingreso y su VLAN.</li>
+              <li><strong>Registro:</strong> crea la entrada <code>[VLAN | MAC | Tipo | Puerto]</code>.</li>
+              <li><strong>Aging timer:</strong> cada entrada dinámica vive 300 s por defecto en Cisco y se renueva si el equipo vuelve a transmitir.</li>
+              <li><strong>Reenvío o inundación:</strong> si el destino es conocido, la trama sale por un solo puerto. Si no, se copia a <strong>todos los puertos de la VLAN</strong> (<em>unknown unicast flooding</em>).</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="card card--line" style="margin-top: var(--s-section);">
+          <h3 class="heading-md">La limitación crítica del hardware</h3>
+          <p>La CAM es un recurso <strong>finito y costoso</strong>. Un switch de acceso como el Catalyst 2960 almacena entre <strong>8,192 y 16,384 entradas</strong>. Esa capacidad limitada es el punto débil que explotan los ataques de Capa 2.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Vectores de ataque -->
+    <section class="band band--white">
+      <div class="container">
+        <div class="section-intro">
+          <h2 class="display-serif-md">3. Vectores de ataque al omitir Port Security</h2>
+          <p>Sin Port Security, la infraestructura queda expuesta de inmediato a tres vectores:</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Vector</th><th scope="col">Impacto primario</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">1. Inundación de tabla MAC</th><td>Fuga de información (<em>sniffing</em>) y denegación de servicio</td></tr>
+              <tr><th scope="row">2. Dispositivos no autorizados</th><td>Intrusión física y puertas traseras</td></tr>
+              <tr><th scope="row">3. Suplantación de MAC</th><td>Evasión de identidad e inestabilidad</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="band band--tint" id="mac-flooding">
+      <div class="container">
+        <h3 class="heading-xl">3.1 Inundación de tabla MAC (<em>CAM flooding</em>)</h3>
+        <div class="split">
+          <div class="prose">
+            <p>El atacante conecta un equipo a una toma de pared desprotegida y ejecuta <code>macof</code> (suite <em>dsniff</em>, incluida en Kali Linux). La herramienta genera entre <strong>50,000 y 150,000 tramas por segundo</strong> con direcciones MAC de origen y destino aleatorias.</p>
+            <h4 class="heading-md">Comportamiento del switch: <em>fail-open</em></h4>
+            <ol>
+              <li>El switch intenta registrar cada SMAC nueva.</li>
+              <li>En milisegundos o segundos, la CAM agota sus entradas.</li>
+              <li>Las MAC legítimas de servidores, impresoras y estaciones quedan fuera de la tabla.</li>
+              <li>Cuando un equipo legítimo transmite, el destino ya no está en la tabla y el switch lo <strong>inunda</strong>.</li>
+              <li>El switch <strong>se comporta como un hub</strong> y replica todo el tráfico confidencial hacia todos los puertos.</li>
+            </ol>
+          </div>
+          <figure class="figure">
+            <img src="assets/img/m1-mac-flooding-macof.svg" width="1200" height="675" alt="Atacante ejecutando macof envía miles de tramas con direcciones MAC aleatorias. La tabla CAM se llena al cien por ciento y expulsa las entradas legítimas.">
+            <figcaption>macof satura la tabla CAM.</figcaption>
+          </figure>
+        </div>
+        <div class="split">
+          <figure class="figure">
+            <img src="assets/img/m1-switch-modo-hub.svg" width="1200" height="675" alt="Con la tabla CAM llena, el switch replica la trama del host A hacia todos los puertos y el atacante la captura con Wireshark en modo promiscuo.">
+            <figcaption>Modo fail-open: el switch actúa como un hub.</figcaption>
+          </figure>
+          <div class="grid">
+            <div class="card">
+              <h4 class="heading-sm">Intercepción y espionaje masivo</h4>
+              <p>Con Wireshark en modo promiscuo, el atacante recibe todo el tráfico de la VLAN: VoIP sin cifrar, correos y credenciales de protocolos heredados como HTTP, FTP o Telnet.</p>
+            </div>
+            <div class="card">
+              <h4 class="heading-sm">Denegación de servicio en el switch</h4>
+              <p>El plano de control y la CPU se saturan procesando aprendizajes de direcciones. La latencia se dispara, se pierden paquetes y se caen servicios críticos.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band band--soft" id="rogue-devices">
+      <div class="container">
+        <h3 class="heading-xl">3.2 Conexión de dispositivos no autorizados (<em>rogue devices</em>)</h3>
+        <div class="split">
+          <div class="prose">
+            <p>Universidades, corporativos, hospitales y oficinas de gobierno tienen tomas RJ-45 en salas de espera, aulas, salas de juntas y escritorios desocupados. Si el puerto no tiene Port Security:</p>
+            <ul>
+              <li>Cualquiera puede desconectar una computadora o impresora y conectar su propia laptop.</li>
+              <li>El switch da enlace de inmediato, aprende la MAC del equipo ajeno y le permite obtener una IP por DHCP.</li>
+            </ul>
+          </div>
+          <figure class="figure">
+            <img src="assets/img/m1-rogue-devices.svg" width="1200" height="675" alt="Toma de pared con tres dispositivos no autorizados: una laptop intrusa, un switch clandestino con riesgo de bucle y un punto de acceso inalámbrico que abre una puerta trasera hacia el estacionamiento.">
+            <figcaption>Tres tipos de dispositivo no autorizado en una misma toma de red.</figcaption>
+          </figure>
+        </div>
+        <div class="grid grid--3" style="margin-top: var(--s-xxxl);">
+          <div class="card">
+            <span class="card__tag">Rogue laptop</span>
+            <h4 class="heading-sm">Laptops intrusas</h4>
+            <p>Equipos con herramientas como nmap o Metasploit inician el reconocimiento interno y el <em>lateral movement</em> sin pasar por los firewalls perimetrales.</p>
+          </div>
+          <div class="card">
+            <span class="card__tag">Rogue switch</span>
+            <h4 class="heading-sm">Switches clandestinos</h4>
+            <p>Un empleado instala un switch doméstico para tener «más puertos». Un cable mal conectado provoca bucles de conmutación, satura STP y tumba el segmento.</p>
+          </div>
+          <div class="card">
+            <span class="card__tag">Rogue AP</span>
+            <h4 class="heading-sm">Puntos de acceso no autorizados</h4>
+            <p>Un router Wi-Fi personal abre una <strong>puerta trasera inalámbrica</strong>: desde el estacionamiento, cualquiera entra a la red corporativa sin autenticarse.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band band--tint" id="mac-spoofing">
+      <div class="container">
+        <h3 class="heading-xl">3.3 Suplantación básica de identidad (<em>MAC spoofing</em>)</h3>
+        <div class="split">
+          <div class="prose">
+            <p>La dirección grabada de fábrica en la tarjeta (<em>Burned-In Address</em>, BIA) <strong>no es inmutable</strong> a nivel de software. En Linux, macOS o Windows, cualquier usuario con privilegios la cambia en menos de 10 segundos:</p>
+            <p class="cli-label">Ejemplo conceptual en un equipo de pruebas</p>
+            <pre class="cli"><code><span class="p">$</span> sudo ip link set dev eth0 down
+<span class="p">$</span> sudo ip link set dev eth0 address 00:1A:2B:3C:4D:5E
+<span class="p">$</span> sudo ip link set dev eth0 up</code></pre>
+            <ol>
+              <li><strong>Evasión de listas blancas:</strong> clonar la MAC de una impresora o teléfono IP basta para saltar filtros MAC simples en firewalls o DHCP.</li>
+              <li><strong>Inestabilidad de la CAM (<em>MAC flapping</em>):</strong> la misma MAC aparece en dos puertos, se desvían paquetes hacia el atacante y la víctima pierde comunicación.</li>
+              <li><strong>Plataforma para ataques avanzados:</strong> es el paso previo al envenenamiento ARP y al <em>Man-in-the-Middle</em>.</li>
+            </ol>
+          </div>
+          <figure class="figure">
+            <img src="assets/img/m1-mac-spoofing.svg" width="1200" height="675" alt="El atacante clona la MAC de la víctima y la entrada de la tabla CAM alterna entre el puerto de la víctima y el del atacante (MAC flapping).">
+            <figcaption>MAC spoofing y MAC flapping.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Matriz comparativa -->
+    <section class="band band--white">
+      <div class="container">
+        <h2 class="display-serif-md">4. Matriz de riesgo: con y sin Port Security</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Escenario</th><th scope="col">Red SIN Port Security (vulnerable)</th><th scope="col">Red CON Port Security (resiliente)</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Ataque con macof</th><td>La CAM se satura en segundos. El switch entra en <em>fail-open</em> (hub) y transmite todo a todos los puertos.</td><td>El puerto limita las MAC permitidas (p. ej. 1 o 2). Pasado el límite, descarta las tramas falsas o se bloquea.</td></tr>
+              <tr><th scope="row">Laptop de un visitante en sala de juntas</th><td>Obtiene conexión inmediata, recibe IP y accede a recursos locales sin protección.</td><td>El switch detecta una MAC desconocida y descarta su tráfico (<em>Protect/Restrict</em>) o deshabilita la interfaz (<em>Shutdown</em>).</td></tr>
+              <tr><th scope="row">Router Wi-Fi clandestino</th><td>El AP reparte IPs por Wi-Fi hacia fuera del edificio sin supervisión.</td><td>Detecta varias MAC en la misma interfaz física y la bloquea de inmediato.</td></tr>
+              <tr><th scope="row">Suplantación de MAC en otro puerto</th><td>La CAM mueve la dirección sin restricción (<em>MAC move</em>), lo que facilita el espionaje.</td><td>Se detecta una <em>MAC move violation</em> y se penaliza el puerto infractor.</td></tr>
+              <tr><th scope="row">Visibilidad para el administrador</th><td>Ninguna alarma. El ataque es silencioso hasta que la red colapsa.</td><td>Trampas SNMP, registros Syslog y contadores de violación.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Preguntas detonadoras -->
+    <section class="band band--forest">
+      <div class="container container--narrow">
+        <h2 class="display-serif-md">5. Preguntas detonadoras</h2>
+        <p>Para mantener la atención del grupo antes de pasar a la sintaxis de configuración.</p>
+        <details class="qa">
+          <summary>La paradoja del switch inteligente</summary>
+          <p class="qa__q">«Si compramos switches para que el tráfico no se escuche en toda la red como con los viejos hubs, ¿cómo es posible que una herramienta de Linux (macof) convierta nuestro switch de 3,000 dólares en un hub de 10 dólares?»</p>
+          <p class="qa__a"><strong>Respuesta esperada:</strong> por el <strong>agotamiento de la memoria CAM</strong>. Con la tabla llena, el comportamiento por defecto de Ethernet (<em>fail-open</em>) obliga al switch a inundar el tráfico por todos los puertos.</p>
+        </details>
+        <details class="qa">
+          <summary>El switch de 5 puertos de la oficina</summary>
+          <p class="qa__q">«Un profesor compra un switch de 5 puertos en una tienda para conectar su computadora, su laptop personal y su consola. ¿Qué problema de seguridad representa y cómo lo detectaría el switch con Port Security?»</p>
+          <p class="qa__a"><strong>Respuesta esperada:</strong> con <code>switchport port-security maximum 1</code>, la segunda dirección MAC que aparezca en el puerto dispara la violación de seguridad.</p>
+        </details>
+        <div class="myth">
+          <h3 class="heading-md">Mito a desmentir</h3>
+          <p><strong>Mito:</strong> «Con un buen firewall perimetral y antivirus en las computadoras, no necesitamos Port Security».</p>
+          <p><strong>Realidad:</strong> el firewall nunca ve el tráfico que circula dentro de la misma VLAN. Desde la sala de cómputo, un atacante puede interceptar el tráfico de sus compañeros sin que un solo paquete pase por el firewall.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Conclusión -->
+    <section class="band band--warm">
+      <div class="container container--narrow">
+        <h2 class="display-serif-md">6. Conclusión</h2>
+        <p class="lead">Port Security no es un lujo de configuración avanzada. Es el <strong>mecanismo primario de defensa y control de acceso físico</strong> de los switches empresariales.</p>
+        <p>Con estos fundamentos claros, ya se pueden estudiar los mecanismos de aprendizaje de MAC (estática, dinámica y <em>sticky</em>) y, después, los modos de penalización y recuperación.</p>
+        <div class="pager btn-row">
+          <a class="btn btn--secondary" href="index.html">← Inicio</a>
+          <a class="btn btn--primary" href="modulo-2-aprendizaje.html">Módulo 2 · Aprendizaje MAC →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Exposición dirigida por <strong>Tyreans Dev</strong> · Conmutación y Enrutamiento en Redes de Datos (SCD-1004) · Unidad 2: Conmutación LAN</p>
+      <nav aria-label="Fuentes">
+        <a href="https://info.support.huawei.com/info-finder/encyclopedia/en/Port+Security.html" rel="noopener">Huawei</a>
+        <a href="https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst6500/ios/15-4SY/config_guide/sup6T/15_3_sy_swcg_6T/port_security.pdf" rel="noopener">Cisco Sup 6T 15.4SY · Cap. 85</a>
+        <a href="https://www.geeksforgeeks.org/computer-networks/port-security-in-computer-network/" rel="noopener">GeeksforGeeks</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

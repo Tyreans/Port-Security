@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675">
+  <title>Diagnóstico físico y por consola del estado err-disabled en Gi0/1</title>
+  <defs>
+    <marker id="arr-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#006b8f"/>
+    </marker>
+    <marker id="arr-danger" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d63b25"/>
+    </marker>
+    <marker id="arr-forest" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#33553c"/>
+    </marker>
+    <marker id="arr-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#312d2a"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="675" fill="#fbf9f8"/>
+  <rect x="48" y="36" width="40" height="4" fill="#f0cc71"/>
+  <text x="48" y="72" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="26" font-weight="800" fill="#161513">DIAGNÓSTICO DEL ESTADO ERR-DISABLED EN CONSOLA Y PANEL FRONTAL</text>
+  <text x="48" y="100" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="500" fill="#47423e">El puerto Gi0/1 se apaga lógicamente (Secure-shutdown) y registra la MAC infractora</text>
+
+  <!-- Switch front panel -->
+  <rect x="64" y="150" width="1072" height="145" rx="8" fill="#312d2a" stroke="#161513" stroke-width="2"/>
+  <text x="96" y="186" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="800" fill="#ffffff">CISCO CATALYST · PANEL FRONTAL</text>
+
+  <!-- Port Gi0/1 in err-disabled -->
+  <rect x="96" y="205" width="140" height="70" rx="6" fill="#161513" stroke="#f0cc71" stroke-width="2"/>
+  <circle cx="126" cy="232" r="10" fill="#f0cc71"/>
+  <text x="150" y="237" font-family="'JetBrains Mono', Consolas, monospace" font-size="15" font-weight="600" fill="#f0cc71">Gi0/1</text>
+  <text x="166" y="262" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#d63b25">err-disabled</text>
+
+  <!-- Healthy ports -->
+  <rect x="260" y="205" width="120" height="70" rx="6" fill="#161513" stroke="#47423e"/>
+  <circle cx="288" cy="232" r="9" fill="#33553c"/>
+  <text x="310" y="237" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" fill="#ffffff">Gi0/2</text>
+  <text x="320" y="262" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#33553c">Secure-up</text>
+
+  <rect x="404" y="205" width="120" height="70" rx="6" fill="#161513" stroke="#47423e"/>
+  <circle cx="432" cy="232" r="9" fill="#33553c"/>
+  <text x="454" y="237" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" fill="#ffffff">Gi0/3</text>
+  <text x="464" y="262" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#33553c">Secure-up</text>
+
+  <text x="560" y="236" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="700" fill="#f0cc71">← El LED de Gi0/1 cambia a ámbar fijo o se apaga</text>
+  <text x="560" y="262" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#f1efed">El protocolo de línea cae a Down/Down de inmediato</text>
+
+  <!-- Console output -->
+  <rect x="64" y="320" width="1072" height="290" rx="8" fill="#161513"/>
+  <text x="96" y="358" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" fill="#f0cc71">%PM-4-ERR_DISABLE: psecure-violation error detected on Gi0/1, putting Gi0/1 in err-disable state</text>
+  <text x="96" y="384" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" fill="#d63b25">%PORT_SECURITY-2-PSECURE_VIOLATION: Security violation occurred, caused by MAC address 0050.7966.6801</text>
+  <line x1="96" y1="406" x2="1104" y2="406" stroke="#47423e"/>
+
+  <text x="96" y="438" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" fill="#006b8f">Switch# show port-security interface gigabitEthernet 0/1</text>
+  <text x="96" y="468" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" fill="#ffffff">Port Security              : Enabled</text>
+  <text x="96" y="494" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" fill="#f0cc71">Port Status                : Secure-shutdown</text>
+  <text x="96" y="520" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" fill="#ffffff">Violation Mode             : Shutdown</text>
+  <text x="96" y="546" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" fill="#d63b25">Last Source Address:Vlan   : 0050.7966.6801:1   &lt;-- MAC intrusa registrada para auditoría</text>
+  <text x="96" y="572" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" fill="#f0cc71">Security Violation Count   : 1</text>
+
+  <text x="1152" y="652" text-anchor="end" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#aea8a2">m3-led-err-disabled.svg</text>
+</svg>

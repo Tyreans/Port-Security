@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675">
+  <title>Módulo 1: Vectores de ataque en Capa 2</title>
+  <defs>
+    <marker id="arr-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#006b8f"/>
+    </marker>
+    <marker id="arr-danger" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d63b25"/>
+    </marker>
+    <marker id="arr-forest" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#33553c"/>
+    </marker>
+    <marker id="arr-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#312d2a"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="675" fill="#fbf9f8"/>
+  <rect x="48" y="36" width="40" height="4" fill="#f0cc71"/>
+  <text x="48" y="72" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="26" font-weight="800" fill="#161513">MÓDULO 1 · VECTORES DE ATAQUE EN CAPA 2</text>
+  <text x="48" y="100" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="500" fill="#47423e">MAC Flooding (macof), Rogue Devices y MAC Spoofing contra la tabla CAM</text>
+
+  <!-- Attacker box -->
+  <rect x="72" y="180" width="280" height="340" rx="8" fill="#ffffff" stroke="#d63b25" stroke-width="2"/>
+  <rect x="72" y="180" width="280" height="44" rx="8" fill="#d63b25"/>
+  <text x="212" y="208" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="800" fill="#ffffff">ATACANTE (KALI / MACOF)</text>
+  <rect x="112" y="255" width="200" height="120" rx="6" fill="#161513"/>
+  <text x="128" y="290" font-family="'JetBrains Mono', Consolas, monospace" font-size="14" fill="#f0cc71">$ macof -i eth0</text>
+  <text x="128" y="316" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" fill="#ffffff">SMAC 00:11:22:33:44:55</text>
+  <text x="128" y="340" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" fill="#ffffff">SMAC 00:AB:CD:EF:12:34</text>
+  <text x="128" y="362" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" fill="#d63b25">150,000 tramas / seg</text>
+  <rect x="92" y="375" width="240" height="14" rx="3" fill="#312d2a"/>
+  <text x="212" y="435" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="600" fill="#161513">Inyección de SMACs falsas</text>
+  <text x="212" y="460" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="14" fill="#47423e">Sin autenticación en IEEE 802.3</text>
+
+  <!-- Stream of frames -->
+  <line x1="362" y1="280" x2="575" y2="280" stroke="#d63b25" stroke-width="3" marker-end="url(#arr-danger)"/>
+  <line x1="362" y1="340" x2="575" y2="340" stroke="#d63b25" stroke-width="3" marker-end="url(#arr-danger)"/>
+  <line x1="362" y1="400" x2="575" y2="400" stroke="#d63b25" stroke-width="3" marker-end="url(#arr-danger)"/>
+  <rect x="405" y="252" width="130" height="22" rx="4" fill="#ffffff" stroke="#d63b25"/>
+  <text x="470" y="268" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#d63b25">SMAC aleatoria</text>
+  <rect x="405" y="312" width="130" height="22" rx="4" fill="#ffffff" stroke="#d63b25"/>
+  <text x="470" y="328" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#d63b25">Rogue AP / Hub</text>
+  <rect x="405" y="372" width="130" height="22" rx="4" fill="#ffffff" stroke="#d63b25"/>
+  <text x="470" y="388" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#d63b25">MAC Spoofing</text>
+
+  <!-- Vulnerable Switch -->
+  <rect x="590" y="180" width="538" height="340" rx="8" fill="#ffffff" stroke="#e4e1dd" stroke-width="2"/>
+  <rect x="622" y="212" width="474" height="72" rx="6" fill="#312d2a"/>
+  <text x="646" y="254" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="18" font-weight="800" fill="#ffffff">SWITCH SIN PORT SECURITY</text>
+  <rect x="940" y="232" width="136" height="32" rx="4" fill="#d63b25"/>
+  <text x="1008" y="253" text-anchor="middle" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" font-weight="600" fill="#ffffff">CAM 100% LLENA</text>
+
+  <!-- 3 risk badges -->
+  <rect x="622" y="312" width="474" height="52" rx="6" fill="#f5f4f2" stroke="#e4e1dd"/>
+  <text x="642" y="344" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="800" fill="#d63b25">1. Fail-Open (Modo Hub):</text>
+  <text x="855" y="344" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#161513">Inunda todo el tráfico a todos los puertos</text>
+
+  <rect x="622" y="378" width="474" height="52" rx="6" fill="#f5f4f2" stroke="#e4e1dd"/>
+  <text x="642" y="410" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="800" fill="#d63b25">2. Intrusión física:</text>
+  <text x="815" y="410" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#161513">Tomas RJ-45 abiertas a cualquier dispositivo</text>
+
+  <rect x="622" y="444" width="474" height="52" rx="6" fill="#f5f4f2" stroke="#e4e1dd"/>
+  <text x="642" y="476" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="800" fill="#d63b25">3. Suplantación:</text>
+  <text x="790" y="476" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" fill="#161513">Clonación de MAC y MAC Flapping sin alertas</text>
+
+  <text x="1152" y="652" text-anchor="end" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#aea8a2">card-m1.svg</text>
+</svg>

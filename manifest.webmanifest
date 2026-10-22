@@ -1,0 +1,14 @@
+{
+  "name": "Port Security — Defensa en la Capa de Enlace",
+  "short_name": "Port Security",
+  "description": "Exposición académica sobre Port Security en conmutadores Cisco: fundamentos, aprendizaje de MAC, modos de violación y buenas prácticas.",
+  "lang": "es-MX",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f1efed",
+  "theme_color": "#211e1c",
+  "icons": [
+    { "src": "assets/img/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
